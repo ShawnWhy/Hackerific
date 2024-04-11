@@ -1,1 +1,21 @@
-<p>gameroom works!</p>
+<div>gameroom</div>
+
+<div *ngFor="let splash of splashes" 
+[ngStyle]="{'position': 'absolute'}"
+[style.height.px]="splash.size"
+    [style.width.px]="splash.size"
+    [style.border-radius.%]="50"
+    [style.left.px]="splash.position.x" 
+    [style.top.px]="splash.position.y" 
+    [style.background-color]="splash.color">
+    
+
+  <!-- content here -->
+</div>
+
+<div *ngFor="let user of userInformation" class="piano">
+<!-- for each of the userinfomration.buttonStates, generate a div with the class of key, and a class that correspond with the buttonStates, if the state is true class = true if false, false -->
+
+  <div *ngFor="let button of user.buttonStates" class="key" [ngClass]="{'true': 'pressed', 'false': 'released'}" [ngStyle]="{'color':user.color}"></div>    
+
+  </div>
