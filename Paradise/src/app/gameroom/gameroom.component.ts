@@ -20,7 +20,7 @@ import { gsap } from 'gsap'
     CommonModule,
     NgIf,
     NgClass,
-    NgFor
+    NgFor,
   ],
   templateUrl: './gameroom.component.html',
   styleUrl: './gameroom.component.css',
@@ -78,15 +78,14 @@ export class GameroomComponent {
     }, 1500);
     //on every 1 second call a function that moves the divs in the array left 10px
     setInterval(() => {
-      for (let i = 0; i < this.splashes.length; i++) {
-        this.moveDivs(
-          this.splashes[i].position.x + 10,
-          this.splashes[i].position.y,
-          i
-        );
-      }
+      // for (let i = 0; i < this.splashes.length; i++) {
+      //   this.moveDivs(
+      //     this.splashes[i].position.x + 10,
+      //     this.splashes[i].position.y,
+      //     i
+      //   );
+      // }
       //remove the item if its left value is greater than the screen's
-     
     }, 10);
   }
 
@@ -103,13 +102,90 @@ export class GameroomComponent {
         false,
         false,
         false,
-        false
+        false,
       ],
+
       //color is in rgb values
       color: 'rgb(255, 0, 0)',
+      fingerColors: [
+        //27 colors in the array each color is in rgb values, each is a different color which is a variation of rgb(255, 0, 0) with each value differing from 5 to 40
+        'rgb(255, 0, 0)',
+        'rgb(255, 5, 5)',
+        'rgb(255, 10, 10)',
+        'rgb(255, 15, 15)',
+        'rgb(250, 20, 20)',
+        'rgb(250, 25, 25)',
+        'rgb(253, 30, 10)',
+        'rgb(255, 35, 35)',
+        'rgb(255, 40, 30)',
+        'rgb(255, 45, 35)',
+        'rgb(255, 50, 40)',
+        'rgb(255, 55, 45)',
+        'rgb(255, 60, 50)',
+        'rgb(255, 65, 55)',
+        'rgb(255, 70, 60)',
+        'rgb(255, 75, 65)',
+        'rgb(255, 80, 70)',
+        'rgb(255, 85, 75)',
+        'rgb(255, 90, 80)',
+        'rgb(255, 80, 70)',
+        'rgb(255, 85, 75)',
+        'rgb(255, 95, 85)',
+        'rgb(250, 20, 20)',
+        'rgb(250, 25, 25)',
+        'rgb(253, 30, 10)',
+        'rgb(255, 35, 35)',
+        'rgb(255, 40, 30)'
+      ],
+    },
+
+        {
+      name: 'Player 2',
+      buttonStates: [
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+      ],
+
+      //color is in rgb values
+      color: 'rgb(255, 0, 0)',
+      fingerColors: [
+        //27 colors in the array each color is in rgb values, each is a different color which is a variation of rgb(255, 0, 0) with each value differing from 5 to 40
+        'rgb(25, 0, 0)',
+        'rgb(25, 5, 5)',
+        'rgb(255, 10, 10)',
+        'rgb(255, 15, 15)',
+        'rgb(250, 20, 20)',
+        'rgb(20, 25, 25)',
+        'rgb(253, 30, 10)',
+        'rgb(55, 35, 35)',
+        'rgb(255, 40, 30)',
+        'rgb(25, 45, 35)',
+        'rgb(255, 50, 40)',
+        'rgb(255, 55, 45)',
+        'rgb(255, 60, 50)',
+        'rgb(255, 65, 55)',
+        'rgb(255, 70, 60)',
+        'rgb(25, 75, 65)',
+        'rgb(255, 80, 70)',
+        'rgb(255, 85, 75)',
+        'rgb(255, 90, 80)',
+        'rgb(255, 80, 70)',
+        'rgb(25, 85, 75)',
+        'rgb(255, 95, 85)',
+        'rgb(250, 20, 20)',
+        'rgb(20, 25, 25)',
+        'rgb(253, 30, 10)',
+        'rgb(55, 35, 35)',
+        'rgb(255, 40, 30)'
+      ],
     }
-
+  ];
   
-  ]
-
 }

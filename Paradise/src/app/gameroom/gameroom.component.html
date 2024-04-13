@@ -1,4 +1,4 @@
-<div>gameroom</div>
+<div class="gameroomContainer">
 
 <div *ngFor="let splash of splashes" 
 [ngStyle]="{'position': 'absolute'}"
@@ -6,16 +6,28 @@
     [style.width.px]="splash.size"
     [style.border-radius.%]="50"
     [style.left.px]="splash.position.x" 
-    [style.top.px]="splash.position.y" 
+    [style.top.%]="splash.position.y" 
     [style.background-color]="splash.color">
     
 
   <!-- content here -->
 </div>
 
-<div *ngFor="let user of userInformation" class="piano">
+<div *ngFor="let user of userInformation; index as i" class="piano">
 <!-- for each of the userinfomration.buttonStates, generate a div with the class of key, and a class that correspond with the buttonStates, if the state is true class = true if false, false -->
-
-  <div *ngFor="let button of user.buttonStates" class="key" [ngClass]="{'true': 'pressed', 'false': 'released'}" [ngStyle]="{'color':user.color}"></div>    
+<!-- [ngClass]="[{button[j] ? 'pressed' : 'released'}]" -->
+  <div *ngFor="let button of user.buttonStates index as j" [attr.itemId]="i"  class="key" [ngClass]="user.buttonStates[j]==true? 'pressed' : 'released'">
+    <!-- {{button[j] ? 'pressed' : 'released'}} -->
+    <div [ngStyle]="{'background-color': user.fingerColors[(27%(j+1))]}" class="finger">
+    </div>
+     <div [ngStyle]="{'background-color': user.fingerColors[(27%(j+1))+1]}" class="finger">
+    </div>
+     <div [ngStyle]="{'background-color': user.fingerColors[(27%(j+1))+2]}" class="finger">
+    </div>
+  </div>    
 
   </div>
+   </div>
+
+  <!-- for each of the userinfomration.buttonStates, generate a div with the class of key, and a id of it index and a class that correspond with the buttonStates, if the state is true class = true if false, false -->
+
