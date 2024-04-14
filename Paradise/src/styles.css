@@ -1,1 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+.splat{
+    position:absolute;
+height:30px;
+width:30px;
+border-radius: 50%;
+}   

@@ -58,9 +58,11 @@ export class GameroomComponent {
 
   //create a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
   public generateSplash() {
+    //get height of the screen
+    var screenHeight = window.innerHeight;
     //create a function that generates a random number
     let random = Math.floor(Math.random() * 100 + 20);
-    let randomHeight = Math.floor(Math.random() * 80 + 20);
+    let randomHeight = Math.floor(Math.random() * screenHeight) + 20;
 
     //push a new splash item to the array
     this.splashes.push({
@@ -74,20 +76,131 @@ export class GameroomComponent {
   //oninit call a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
   ngOnInit() {
     setInterval(() => {
-      // this.generateSplash();
+      this.generateSplash();
     }, 1500);
     //on every 1 second call a function that moves the divs in the array left 10px
     setInterval(() => {
-      // for (let i = 0; i < this.splashes.length; i++) {
-      //   this.moveDivs(
-      //     this.splashes[i].position.x + 10,
-      //     this.splashes[i].position.y,
-      //     i
-      //   );
-      // }
+
+      for (let i = 0; i < this.splashes.length; i++) {
+        this.moveDivs(
+          this.splashes[i].position.x + 50,
+          this.splashes[i].position.y,
+          i
+        );
+      }
       //remove the item if its left value is greater than the screen's
+      for (let i = 0; i < this.splashes.length; i++) {
+        //get the width of the screen
+        var screenWidth = window.innerWidth;
+        if (this.splashes[i].position.x > screenWidth) {
+          this.splashes.splice(i, 1);
+        }
+      }
     }, 10);
   }
+
+  createSplat(key: any) {
+    console.log(key);
+    //for each of the divs with finger class get the x location and height
+    var selectedKey;
+    switch (key) {
+      
+      case 'a':
+        console.log("key a")
+         selectedKey = document.getElementsByClassName('key')[0];
+        break;
+      case 's':
+         selectedKey = document.getElementsByClassName('key')[1];
+        break;
+      case 'd':
+        console.log("key d")
+         selectedKey = document.getElementsByClassName('key')[2];
+        break;
+      case 'f':
+         selectedKey = document.getElementsByClassName('key')[3];
+        break;
+      case 'g':
+         selectedKey = document.getElementsByClassName('key')[4];
+        break;
+      case 'h':
+         selectedKey = document.getElementsByClassName('key')[5];
+        break;
+      case 'j':
+         selectedKey = document.getElementsByClassName('key')[6];
+        break;
+      case 'k':
+         selectedKey = document.getElementsByClassName('key')[7];
+        break;
+      case 'l':
+         selectedKey = document.getElementsByClassName('key')[8];
+        break;
+      default:
+        selectedKey = document.getElementsByClassName('key')[0];
+  
+    }
+    console.log(selectedKey);
+    // selectedKey.style.backgroundColor = 'yellow';
+    var finger = selectedKey.getElementsByClassName('finger');
+
+    // for (let i = 0; i < finger.length; i++) {
+    //   //set finger element background t0 yellow
+    //   finger[i].style.backgroundColor = 'yellow';
+    
+    // }
+    // console.log(finger);
+    for (let i = 0; i < finger.length; i++) {
+      var x1 = finger[i].getBoundingClientRect().left;
+      var x2 = x1+finger[i].getBoundingClientRect().width
+      var y = finger[i].getBoundingClientRect().height;
+      console.log(x1, x2, y);
+      for(let j = 0; j < this.splashes.length; j++) {
+        let positionx = this.splashes[j].position.x;
+        let positiony = this.splashes[j].position.y;
+        let size = this.splashes[j].size;
+      //create a new div with the class splat
+//if the bounding box of the finger div intersects with the bounding box of the splash div create a new div with the class splat
+       if(  (positionx+size>=x1 && positionx<=x2 && y>36) 
+        // && (positiony+size >=y && positiony <= y) 
+      ) {
+      var splat = document.createElement('div');
+      splat.className = 'splat';
+      //set the position of the div to the x and y location of the finger
+      splat.style.left = positionx + 'px';
+      splat.style.top = positiony + 'px';
+      //get the rgb value of the finger div
+      let fingercolor = window.getComputedStyle(finger[i]).backgroundColor;
+      let splashcolor = this.splashes[j].color;
+      // get the individual rgb values from both the finger and splash div
+      let fingerRGB = fingercolor.match(/\d+/g);
+      let splashRGB = splashcolor.match(/\d+/g);
+      //get a new color from the average of the two colors
+      let newColor
+      if(fingerRGB && splashRGB){
+      newColor = `rgb(${(parseInt(fingerRGB[0]) + parseInt(splashRGB[0])) / 2}, ${(parseInt(fingerRGB[1]) + parseInt(splashRGB[1])) / 2}, ${(parseInt(fingerRGB[2]) + parseInt(splashRGB[2])) / 2})`;
+      splat.style.backgroundColor = newColor;
+  
+      }
+      else{
+      splat.style.backgroundColor = splashcolor;
+
+      }
+      //remost this splash
+      this.splashes.splice(j, 1);
+      // console.log(fingercolor);
+      //append the div to the body
+      // document.getElementsByClassName('gameroomContainer')[0].appendChild(splat);
+      //append the splat to the body
+      document.body.appendChild(splat);
+        //remove the div after 1 second
+      // setTimeout(() => {
+      //   splat.remove();
+      // }, 1000);
+    }
+  }
+    
+
+  }
+}
 
   //create a list of userinformation that has name, a list of nine button states, which include pressed(a boolean), and user color
   userInformation: any[] = [
@@ -135,57 +248,99 @@ export class GameroomComponent {
         'rgb(250, 25, 25)',
         'rgb(253, 30, 10)',
         'rgb(255, 35, 35)',
-        'rgb(255, 40, 30)'
-      ],
-    },
-
-        {
-      name: 'Player 2',
-      buttonStates: [
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false,
-        false,
-      ],
-
-      //color is in rgb values
-      color: 'rgb(255, 0, 0)',
-      fingerColors: [
-        //27 colors in the array each color is in rgb values, each is a different color which is a variation of rgb(255, 0, 0) with each value differing from 5 to 40
-        'rgb(25, 0, 0)',
-        'rgb(25, 5, 5)',
-        'rgb(255, 10, 10)',
-        'rgb(255, 15, 15)',
-        'rgb(250, 20, 20)',
-        'rgb(20, 25, 25)',
-        'rgb(253, 30, 10)',
-        'rgb(55, 35, 35)',
         'rgb(255, 40, 30)',
-        'rgb(25, 45, 35)',
-        'rgb(255, 50, 40)',
-        'rgb(255, 55, 45)',
-        'rgb(255, 60, 50)',
-        'rgb(255, 65, 55)',
-        'rgb(255, 70, 60)',
-        'rgb(25, 75, 65)',
-        'rgb(255, 80, 70)',
-        'rgb(255, 85, 75)',
-        'rgb(255, 90, 80)',
-        'rgb(255, 80, 70)',
-        'rgb(25, 85, 75)',
-        'rgb(255, 95, 85)',
-        'rgb(250, 20, 20)',
-        'rgb(20, 25, 25)',
-        'rgb(253, 30, 10)',
-        'rgb(55, 35, 35)',
-        'rgb(255, 40, 30)'
       ],
     }
-  ];
+      ];
+
+
+  //register keypress
+  onKeydown(event:any) {
+    setTimeout(() => {
+      this.createSplat(event.key);
+    }, 20);
+    setTimeout(() => {
+      this.createSplat(event.key);
+    }, 120);
+    setTimeout(() => {
+      this.createSplat(event.key);
+    }, 220);  
+    
+
+ console.log(event.key);
+switch(event.key) {
+  //the list of keys are asdfghjkl
+  case 'a':
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[0] = true;
+    setTimeout(() => {
+    this.userInformation[0].buttonStates[0] = false;
+
+    }, 500);
+    break;
   
+  case 's':
+
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[1] = true;
+        setTimeout(() => {
+          this.userInformation[0].buttonStates[1] = false;
+        }, 500);
+    break;
+  case 'd':
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[2] = true;
+        setTimeout(() => {
+          this.userInformation[0].buttonStates[2] = false;
+        }, 500);
+    break;
+  case 'f':
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[3] = true;
+        setTimeout(() => {
+          this.userInformation[0].buttonStates[3] = false;
+        }, 500);
+    break;
+  case 'g':
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[4] = true;
+        setTimeout(() => {
+          this.userInformation[0].buttonStates[4] = false;
+        }, 500);
+    break;
+  case 'h':
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[5] = true;
+        setTimeout(() => {
+          this.userInformation[0].buttonStates[5] = false;
+        }, 500);
+    break;
+  case 'j':
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[6] = true;
+        setTimeout(() => {
+          this.userInformation[0].buttonStates[6] = false;
+        }, 500);
+    break;
+  case 'k':
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[7] = true;
+        setTimeout(() => {
+          this.userInformation[0].buttonStates[7] = false;
+        }, 500);
+    break;
+  case 'l':
+    //if the key is pressed change the button state to true
+    this.userInformation[0].buttonStates[8] = true;
+        setTimeout(() => {
+          this.userInformation[0].buttonStates[8] = false;
+        }, 500);
+    break;
+
+}
+
+}
+
+
+
 }

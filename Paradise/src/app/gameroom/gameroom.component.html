@@ -1,4 +1,4 @@
-<div class="gameroomContainer">
+<div class="gameroomContainer" >
 
 <div *ngFor="let splash of splashes" 
 [ngStyle]="{'position': 'absolute'}"
@@ -6,14 +6,14 @@
     [style.width.px]="splash.size"
     [style.border-radius.%]="50"
     [style.left.px]="splash.position.x" 
-    [style.top.%]="splash.position.y" 
+    [style.top.px]="splash.position.y" 
     [style.background-color]="splash.color">
     
 
   <!-- content here -->
 </div>
 
-<div *ngFor="let user of userInformation; index as i" class="piano">
+<div *ngFor="let user of userInformation; index as i" class="piano" id="{{ user.usrname }}">
 <!-- for each of the userinfomration.buttonStates, generate a div with the class of key, and a class that correspond with the buttonStates, if the state is true class = true if false, false -->
 <!-- [ngClass]="[{button[j] ? 'pressed' : 'released'}]" -->
   <div *ngFor="let button of user.buttonStates index as j" [attr.itemId]="i"  class="key" [ngClass]="user.buttonStates[j]==true? 'pressed' : 'released'">
@@ -28,6 +28,9 @@
 
   </div>
    </div>
+
+   <input (keydown)="onKeydown($event)" style = "position:absolute; height:50px; width:100%;top:40px">
+
 
   <!-- for each of the userinfomration.buttonStates, generate a div with the class of key, and a id of it index and a class that correspond with the buttonStates, if the state is true class = true if false, false -->
 

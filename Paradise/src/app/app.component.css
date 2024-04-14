@@ -16,3 +16,10 @@ app-gameroom{
     position: absolute;
 
 }
+
+.splat{
+    position:absolute;
+height:30px;
+width:30px;
+border-radius: 50%;
+}
