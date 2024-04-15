@@ -98,6 +98,9 @@ export class GameroomComponent {
       }
     }, 10);
   }
+  createSplatChild(){
+
+  }
 
   createSplat(key: any) {
     console.log(key);
@@ -162,39 +165,42 @@ export class GameroomComponent {
        if(  (positionx+size>=x1 && positionx<=x2 && y>36) 
         // && (positiony+size >=y && positiony <= y) 
       ) {
-      var splat = document.createElement('div');
-      splat.className = 'splat';
-      //set the position of the div to the x and y location of the finger
-      splat.style.left = positionx + 'px';
-      splat.style.top = positiony + 'px';
-      //get the rgb value of the finger div
-      let fingercolor = window.getComputedStyle(finger[i]).backgroundColor;
-      let splashcolor = this.splashes[j].color;
-      // get the individual rgb values from both the finger and splash div
-      let fingerRGB = fingercolor.match(/\d+/g);
-      let splashRGB = splashcolor.match(/\d+/g);
-      //get a new color from the average of the two colors
-      let newColor
-      if(fingerRGB && splashRGB){
-      newColor = `rgb(${(parseInt(fingerRGB[0]) + parseInt(splashRGB[0])) / 2}, ${(parseInt(fingerRGB[1]) + parseInt(splashRGB[1])) / 2}, ${(parseInt(fingerRGB[2]) + parseInt(splashRGB[2])) / 2})`;
-      splat.style.backgroundColor = newColor;
-  
-      }
-      else{
-      splat.style.backgroundColor = splashcolor;
 
+
+        for(let h=0;h<5;h++){
+          
+        
+        //create a object with the attrbutes, color, size, border radius, top and left values
+            let fingercolor = window.getComputedStyle(
+              finger[i]
+            ).backgroundColor;
+            let splashcolor = this.splashes[j].color;
+            // get the individual rgb values from both the finger and splash div
+            let fingerRGB = fingercolor.match(/\d+/g);
+            let splashRGB = splashcolor.match(/\d+/g);
+        let newColor;
+        if (fingerRGB && splashRGB) {
+          newColor = `rgb(${
+            (parseInt(fingerRGB[0]) + parseInt(splashRGB[0])) / 2
+          }, ${(parseInt(fingerRGB[1]) + parseInt(splashRGB[1])) / 2}, ${
+            (parseInt(fingerRGB[2]) + parseInt(splashRGB[2])) / 2
+          })`;
+          
+          var splat = {
+            color: newColor,
+            size: Math.random() * parseFloat(this.splashes[j].size) + 2,
+            borderRadius: Math.random() * 50 + "%",
+            top: positiony,
+            left: positionx,
+            animation: Math.floor(Math.random() * 19) +1,
+          };
+
+          this.splatBits.push(splat);
+        }
       }
-      //remost this splash
+
       this.splashes.splice(j, 1);
-      // console.log(fingercolor);
-      //append the div to the body
-      // document.getElementsByClassName('gameroomContainer')[0].appendChild(splat);
-      //append the splat to the body
-      document.body.appendChild(splat);
-        //remove the div after 1 second
-      // setTimeout(() => {
-      //   splat.remove();
-      // }, 1000);
+
     }
   }
     
@@ -253,6 +259,9 @@ export class GameroomComponent {
     }
       ];
 
+  //create a array of splatbits, each containing rgbcolor, size, borderradius, top and left values
+  splatBits: any[] = [
+  ];
 
   //register keypress
   onKeydown(event:any) {
@@ -343,4 +352,22 @@ switch(event.key) {
 
 
 
+}
+
+//on button click save the contents of the pianodiv into a image filw with html2canvas
+function saveImage() {
+  //get the piano div
+  var piano = document.getElementById('piano');
+  //use html2canvas to save the contents of the piano div to an image file
+  html2canvas(piano).then(function (canvas) {
+    var a = document.createElement('a');
+    //convert the canvas to a data url
+    var image = canvas.toDataURL('image/png');
+    //set the href of the anchor tag to the data url
+    a.href = image;
+    //set the download attribute of the anchor tag to the image
+    a.download = 'image.png';
+    //click the anchor tag
+    a.click();
+  });
 }

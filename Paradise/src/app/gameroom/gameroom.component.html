@@ -1,5 +1,7 @@
 <div class="gameroomContainer" >
-
+<style>
+  
+</style>
 <div *ngFor="let splash of splashes" 
 [ngStyle]="{'position': 'absolute'}"
 [style.height.px]="splash.size"
@@ -28,6 +30,12 @@
 
   </div>
    </div>
+   <!-- for each of the splatBits, generate a div with the class of splat and with the color of the splatBit.color, and the position of the splatBit.position, and the size of the splatBit.size -->
+   <!-- the class of this element is splat and splatClass + the "animation" value of the splatBit -->
+   <div *ngFor="let splat of splatBits"  
+   [ngClass]="'splat' + ' splatClass' + splat.animation"
+   [ngStyle]="{'background-color': splat.color, 'left.px': splat.left, 'top.px': splat.top, 'height.px': splat.size, 'width.px': splat.size, 'border-radius':splat.borderRadius }"></div>
+   <!-- <div *ngFor="let splat of splatBits"  [ngStyle]="{'background-color': splat.color, 'left.px': splat.left, 'top.px': splat.top, 'height.px': splat.size, 'width.px': splat.size, 'border-radius':splat.borderRadius }"></div> -->
 
    <input (keydown)="onKeydown($event)" style = "position:absolute; height:50px; width:100%;top:40px">
 

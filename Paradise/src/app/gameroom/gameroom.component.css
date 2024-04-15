@@ -69,3 +69,316 @@ height:30px;
 width:30px;
 border-radius: 50%;
 }
+
+@keyframes splat1 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(50px);
+    }
+    
+}
+/* create 20 splat @keyframes animations each with a different translate value */
+
+.piano{
+    width:100%;
+    height:100%;
+    position: absolute;
+   flex-direction: row;
+    display:flex;
+    border:2px solid lightblue
+}
+
+.key{
+position:relative;
+height:20%;
+width:10%;
+margin:auto;
+display: flex;
+flex-direction: row;
+margin-bottom:0;
+}
+
+.finger{
+    height:30px;
+    width:30%;
+    margin:auto;
+    margin-bottom:0px;
+    transform-origin: bottom;
+        transition: transform 0.5s;
+    transition-delay: 0s;
+}
+.piano:focus{
+    background-color:lightskyblue;
+}
+
+.gameroomContainer{
+    height:100%;
+    width:100%;
+    position:absolute
+}
+
+.pressed .finger:nth-child(1){
+    /* transition: transform 0.5s; */
+    animation:press1 0.2s 1;}
+.pressed .finger:nth-child(2){
+    /* transition-property: transform;
+    transition-duration: .5s; */
+    animation:press1 0.2s 1;
+    animation-delay: .1s;
+}
+.pressed .finger:nth-child(3){
+    /* transition: transform 0.5s; */
+      animation:press1 0.2s 1;
+    animation-delay: .2s;
+}
+
+@keyframes press1{
+    0%{
+        transform: scaleY(1);
+    }
+    50%{
+        transform: scaleY(50);
+    }
+    100%{
+        transform: scaleY(1);
+    }
+}
+
+.splat{
+    position:absolute;
+height:30px;
+width:30px;
+border-radius: 50%;
+}
+
+@keyframes splat1 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(50px);
+    }
+    
+}
+/* create 20 splat @keyframes animations each with a different translate value */
+
+@keyframes splat2 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-60px, -10px);
+    }
+}
+
+@keyframes splat3 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-70px, -20px);
+    }
+}
+@keyframes splat4 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-80px, -30px);
+    }
+}
+@keyframes splat5 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-90px, 40px);
+    }
+}
+@keyframes splat6 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-100px, -50px);
+    }
+}
+@keyframes splat7 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-110px, -60px);
+    }
+}
+@keyframes splat8 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-120px, 70px);
+    }
+}
+@keyframes splat9 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-130px, -80px);
+    }
+}
+@keyframes splat10 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(140px, -90px);
+    }
+}
+@keyframes splat11 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-150px, -100px);
+    }
+}
+@keyframes splat12 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(160px, -110px);
+    }
+}
+@keyframes splat13 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-170px, -120px);
+    }
+}
+@keyframes splat14 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-180px, -130px);
+    }
+}
+@keyframes splat15 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-190px, 140px);
+    }
+}
+@keyframes splat16 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-200px, -150px);
+    }
+}
+@keyframes splat17 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-210px, -160px);
+    }
+}
+@keyframes splat18 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(-220px, -170px);
+    }
+}
+
+
+/* ... */
+
+@keyframes splat19 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(240px, 180px);
+    }
+}
+@keyframes splat20 {
+    0% {
+        transform: translate(0);
+    }
+    100% {
+        transform: translate(250px, 190px);
+    }
+}
+
+.splatClass1 {
+    animation: splat1 .2s both
+}
+.splatClass2 {
+    animation: splat2 .2s both
+}
+.splatClass3 {
+    animation: splat3 .2s both
+}
+.splatClass4 {
+    animation: splat4 .2s both
+}
+.splatClass5 {
+    animation: splat5 .2s both
+}
+.splatClass6 {
+    animation: splat6 .2s both
+}
+.splatClass7 {
+    animation: splat7 .2s both
+}
+.splatClass8 {
+    animation: splat8 .2s both
+}
+.splatClass9 {
+    animation: splat9 .2s both
+}
+.splatClass10 {
+    animation: splat10 .2s both
+}
+.splatClass11 {
+    animation: splat11 .2s both
+}
+.splatClass12 {
+    animation: splat12 .2s both
+}
+.splatClass13 {
+    animation: splat13 .2s both
+}
+.splatClass14 {
+    animation: splat14 .2s both
+}
+.splatClass15 {
+    animation: splat15 .2s both
+}
+.splatClass16 {
+    animation: splat16 .2s both
+}
+.splatClass17 {
+    animation: splat17 .2s both
+}
+.splatClass18 {
+    animation: splat18 .2s both
+}
+.splatClass19 {
+    animation: splat19 .2s both
+}
+.splatClass20 {
+    animation: splat20 .2s both
+}
