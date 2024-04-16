@@ -28,27 +28,46 @@ app.use(
   app.use(passportControl.session());
 // Routes
 // =============================================================
-require("./routes/api-routes")(app);
-
-//socket.io
-//import socket.io
-const io = require("socket.io")(server);
-io.on("connection", (socket) => {
-  socket.on("keyPressed", (data) => {
-    io.emit("changeHtml", data);
-  });
-});
-
-
-
+// require("./routes/api-routes")(app);
 var PORT = process.env.PORT || 8081;
 const server = require("http").createServer(app);
 
-db.sequelize.sync().then(function() {
+//socket.io
+//import socket.io
+
+var io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:4200",
+    // methods: ["GET", "POST"],
+    // credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  socket.emit("news", { hello: "world" });
+
+  socket.on("my other event", (data) => {
+    console.log(data);
+    //emit an event to all connected clients including sender
+    socket.emit("news2", { hello: "world2" });
+});
+// setInterval(() => {
+//   socket.emit("news", { hello: "world" });
+// }, 200);
+});
+
+
+
   server.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
+  });
+
+
+// db.sequelize.sync().then(function() {
+//   server.listen(PORT, function() {
+//     console.log("App listening on PORT " + PORT);
     
 
   
-  });
-});
+//   });
+// });
