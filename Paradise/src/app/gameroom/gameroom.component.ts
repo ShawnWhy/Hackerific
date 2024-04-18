@@ -92,13 +92,18 @@ export class GameroomComponent implements OnInit{
         this.socket.on('news', (data: any) => {
           console.log(data);
           this.socket.emit('my other event', { my: 'data from client' });
-
-       
+   
         });
        //receive news2 event from the server and console log it
         this.socket.on('news2', (data: any) => {
           console.log(data);
         })
+        this.socket.on('changeHtml', (data:any) => {
+              // Trigger a change in the html based on the data received from the server
+         console.log('Received data:', data);
+         this.pressKey(data.key);
+         });
+
     setInterval(() => {
       this.generateSplash();
     }, 1500);
@@ -278,19 +283,25 @@ export class GameroomComponent implements OnInit{
   splatBits: any[] = [];
 
   //register keypress
-  onKeydown(event: any) {
+  onKeydown(event:any) {
+    this.socket.emit('keyPressed', { key: event.key });
+    // this.pressKey(event.key);
+}
+
+pressKey(key: any) {
+
     setTimeout(() => {
-      this.createSplat(event.key);
+      this.createSplat(key);
     }, 20);
     setTimeout(() => {
-      this.createSplat(event.key);
+      this.createSplat(key);
     }, 120);
     setTimeout(() => {
-      this.createSplat(event.key);
+      this.createSplat(key);
     }, 220);
 
     // console.log(event.key);
-    switch (event.key) {
+    switch (key) {
       //the list of keys are asdfghjkl
       case 'a':
         //if the key is pressed change the button state to true

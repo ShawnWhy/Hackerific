@@ -44,6 +44,12 @@ var io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
+  socket.on("keyPressed", (data) => {
+    io.emit("changeHtml", data);
+  });
+});
+
+io.on("connection", (socket) => {
   socket.emit("news", { hello: "world" });
 
   socket.on("my other event", (data) => {
