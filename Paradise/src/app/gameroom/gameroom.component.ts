@@ -2,6 +2,8 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, OnChanges, Component, OnInit } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { NgClass, NgIf } from '@angular/common';
+import { HomeService } from '../home.service';
+
 import {
   
   RouterLink,
@@ -28,16 +30,53 @@ import html2canvas from 'html2canvas';
   templateUrl: './gameroom.component.html',
   styleUrl: './gameroom.component.css',
 })
-export class GameroomComponent implements OnInit{
- socket: any;
-
-
-  
-  constructor() {
+export class GameroomComponent implements OnInit {
+  socket: any;
+  // create a user variable that takes from variables passed from the waiting room
+  user: any;
+  constructor(private homeSV: HomeService) {
     this.socket = io('http://localhost:8081');
+    this.homeSV.getCurrentUser().subscribe((user) => {
+       console.log(user);
+      //  console.log('comminity page');
+      this.user = user;
+    });
+    console.log(this.user)
+    if (this.user.color) {
+      console.log("this.user", this.user)
+      // this.createNewUser(this.user);
+      this.socket.emit('gameStart', {
+        name: this.user.username,
+        color: this.user.color,
+        
+
+      })
+
+    }
   }
 
+  createNewUser(user: any) {
+    let newFingerColors = [];
+    let newButtonStates = [];
+    for (let i = 0; i < 27; i++) {
+      newFingerColors.push(this.randomColorBasedOnColor(user.color));
 
+    }
+
+    for(let i=0; i<9; i++){
+      newButtonStates.push(false);
+
+    }
+    let newUser = {
+      name: user.username,
+      buttonStates: newButtonStates,
+      color: user.color,
+      fingerColors: newFingerColors,
+    };
+
+    this.userInformation.push(newUser);
+
+  }
 
   //create a an array that holds divs, their color, size and position
   splashes: any[] = [
@@ -69,18 +108,49 @@ export class GameroomComponent implements OnInit{
     return `rgb(${random}, ${random2}, ${random3})`;
   }
 
-  //create a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
-  public generateSplash() {
-    //get height of the screen
-    var screenHeight = window.innerHeight;
-    //create a function that generates a random number
-    let random = Math.floor(Math.random() * 100 + 20);
-    let randomHeight = Math.floor(Math.random() * screenHeight) + 20;
+  public randomColorBasedOnColor(color: any) {
+    //turn the color into rgb values
+    let colorRGB = color.match(/\d+/g);
+    //create a new color based on the color passed in plus or minis 50 if number is negative, number is 0
+    let random = Math.floor(Math.random() * 100)-50;
+    let random2 = Math.floor(Math.random() * 100)-50;
+    let random3 = Math.floor(Math.random() * 100)-50;
+    let newRed = parseInt(colorRGB[0]) + random;
+    let newGreen = parseInt(colorRGB[1]) + random2;
+    let newBlue = parseInt(colorRGB[2]) + random3;
+    //check if the new color is within the rgb range
+    if (newRed > 255) {
+      newRed = 255;
+    }
+    if (newRed < 0) {
+      newRed = 0;
+    }
+    if (newGreen > 255) {
+      newGreen = 255;
+    }
+    if (newGreen < 0) {
+      newGreen = 0;
+    }
+    if (newBlue > 255) {
+      newBlue = 255;
+    }
+    if (newBlue < 0) {
+      newBlue = 0;
+    }
+    //return a random color
+    return `rgb(${newRed}, ${newGreen}, ${newBlue})`;
 
+  }
+  //create a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
+  public generateSplash(data: any) {
+    //get height of the screen
+    //create a function that generates a random number
+    let screenHeight = window.innerHeight;
+    let randomHeight = screenHeight * (parseFloat(data.height) / 100);
     //push a new splash item to the array
     this.splashes.push({
-      color: this.randomColor(),
-      size: random,
+      color: data.color,
+      size: data.size,
       position: { x: -150, y: randomHeight },
       state: 'bullet',
     });
@@ -88,25 +158,31 @@ export class GameroomComponent implements OnInit{
 
   //oninit call a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
   ngOnInit() {
+    this.socket.on('gameStart', (data: any) => {
+      console.log("data-users", data);
+this.userInformation = data;
+    });
+    this.socket.on('news', (data: any) => {
+      console.log(data);
+      this.socket.emit('my other event', { my: 'data from client' });
+    });
+    //receive news2 event from the server and console log it
+    this.socket.on('news2', (data: any) => {
+      console.log(data);
+    });
+    this.socket.on('changeHtml', (data: any) => {
+      // Trigger a change in the html based on the data received from the server
+      console.log('Received data:', data);
+      this.pressKey(data.key);
+    });
+    this.socket.on('generateSplash', (data: any) => {
+      // console.log(data);
+      this.generateSplash(data);
+    });
 
-        this.socket.on('news', (data: any) => {
-          console.log(data);
-          this.socket.emit('my other event', { my: 'data from client' });
-   
-        });
-       //receive news2 event from the server and console log it
-        this.socket.on('news2', (data: any) => {
-          console.log(data);
-        })
-        this.socket.on('changeHtml', (data:any) => {
-              // Trigger a change in the html based on the data received from the server
-         console.log('Received data:', data);
-         this.pressKey(data.key);
-         });
-
-    setInterval(() => {
-      this.generateSplash();
-    }, 1500);
+    // setInterval(() => {
+    //   this.generateSplash();
+    // }, 1500);
     //on every 1 second call a function that moves the divs in the array left 10px
     setInterval(() => {
       for (let i = 0; i < this.splashes.length; i++) {
@@ -126,7 +202,6 @@ export class GameroomComponent implements OnInit{
       }
     }, 10);
   }
-  createSplatChild() {}
 
   createSplat(key: any) {
     // console.log(key);
@@ -283,13 +358,13 @@ export class GameroomComponent implements OnInit{
   splatBits: any[] = [];
 
   //register keypress
-  onKeydown(event:any) {
+  onKeydown(event: any) {
     this.socket.emit('keyPressed', { key: event.key });
     // this.pressKey(event.key);
-}
+  }
 
-pressKey(key: any) {
-
+  pressKey(key: any) {
+    console.log(this.userInformation);
     setTimeout(() => {
       this.createSplat(key);
     }, 20);
