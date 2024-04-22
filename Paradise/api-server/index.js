@@ -149,9 +149,10 @@ io.on("connection", (socket) => {
   socket.on('gameStart', (data) => {
     console.log('gamestart', data)
     createNewUser(data);
-   socket.emit("gameStart",users) //add the user to the array
+   io.emit("gameStart",users) //add the user to the array
   })
   socket.on("keyPressed", (data) => {
+    console.log("keyPressed", data);
     io.emit("changeHtml", data);
   });
   
@@ -161,13 +162,15 @@ io.on("connection", (socket) => {
     io.emit("updateUsers", users);
   });
 
+
+
   //setinterval that sends the result of a generatesplath over to all users
+
+});
+
 setInterval(() => {
   io.emit("generateSplash", generateSplash());
 }, 1500);
-});
-
-
 
 
 

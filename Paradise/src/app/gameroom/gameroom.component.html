@@ -15,7 +15,7 @@
   <!-- content here -->
 </div>
 
-<div *ngFor="let user of userInformation; index as i" class="piano" id="{{ user.usrname }}">
+<div *ngFor="let user of userInformation; index as i" class="piano" id="{{ user.name }}">
 <!-- for each of the userinfomration.buttonStates, generate a div with the class of key, and a class that correspond with the buttonStates, if the state is true class = true if false, false -->
 <!-- [ngClass]="[{button[j] ? 'pressed' : 'released'}]" -->
   <div *ngFor="let button of user.buttonStates index as j" [attr.itemId]="i"  class="key" [ngClass]="user.buttonStates[j]==true? 'pressed' : 'released'">

@@ -173,7 +173,7 @@ this.userInformation = data;
     this.socket.on('changeHtml', (data: any) => {
       // Trigger a change in the html based on the data received from the server
       console.log('Received data:', data);
-      this.pressKey(data.key);
+      this.pressKey(data.key, data.name);
     });
     this.socket.on('generateSplash', (data: any) => {
       // console.log(data);
@@ -203,42 +203,52 @@ this.userInformation = data;
     }, 10);
   }
 
-  createSplat(key: any) {
+  createSplat(key: any, name:any) {
     // console.log(key);
     //for each of the divs with finger class get the x location and height
     var selectedKey;
+    //find the index of the user that pressed the key via name attribute
+    // find the element that has the id of the name of the user that pressed the key
+    var selectedPiano = document.getElementById(name);
+    console.log("selectedPiano", selectedPiano);
+    if(!selectedPiano){
+      //stop
+      console.log('selected piano not found');
+      return;
+    }
+    
     switch (key) {
       case 'a':
         // console.log('key a');
-        selectedKey = document.getElementsByClassName('key')[0];
+        selectedKey = selectedPiano.getElementsByClassName('key')[0];
         break;
       case 's':
-        selectedKey = document.getElementsByClassName('key')[1];
+        selectedKey = selectedPiano.getElementsByClassName('key')[1];
         break;
       case 'd':
         // console.log('key d');
-        selectedKey = document.getElementsByClassName('key')[2];
+        selectedKey = selectedPiano.getElementsByClassName('key')[2];
         break;
       case 'f':
-        selectedKey = document.getElementsByClassName('key')[3];
+        selectedKey = selectedPiano.getElementsByClassName('key')[3];
         break;
       case 'g':
-        selectedKey = document.getElementsByClassName('key')[4];
+        selectedKey = selectedPiano.getElementsByClassName('key')[4];
         break;
       case 'h':
-        selectedKey = document.getElementsByClassName('key')[5];
+        selectedKey = selectedPiano.getElementsByClassName('key')[5];
         break;
       case 'j':
-        selectedKey = document.getElementsByClassName('key')[6];
+        selectedKey = selectedPiano.getElementsByClassName('key')[6];
         break;
       case 'k':
-        selectedKey = document.getElementsByClassName('key')[7];
+        selectedKey = selectedPiano.getElementsByClassName('key')[7];
         break;
       case 'l':
-        selectedKey = document.getElementsByClassName('key')[8];
+        selectedKey = selectedPiano.getElementsByClassName('key')[8];
         break;
       default:
-        selectedKey = document.getElementsByClassName('key')[0];
+        selectedKey = selectedPiano.getElementsByClassName('key')[0];
     }
     // console.log(selectedKey);
     // selectedKey.style.backgroundColor = 'yellow';
@@ -359,87 +369,95 @@ this.userInformation = data;
 
   //register keypress
   onKeydown(event: any) {
-    this.socket.emit('keyPressed', { key: event.key });
+    this.socket.emit('keyPressed', { key: event.key , name: this.user.username});
     // this.pressKey(event.key);
   }
 
-  pressKey(key: any) {
+  pressKey(key: any, name: any) {
     console.log(this.userInformation);
+    console.log('name', name);
     setTimeout(() => {
-      this.createSplat(key);
+      this.createSplat(key, name);
     }, 20);
     setTimeout(() => {
-      this.createSplat(key);
+      this.createSplat(key, name);
     }, 120);
     setTimeout(() => {
-      this.createSplat(key);
+      this.createSplat(key, name);
     }, 220);
+
+    // find user index of user that matches the name of the user that pressed the key
+    let userIndex = this.userInformation.findIndex((user) => {
+      return user.name === name;
+    });
+
+    console.log(userIndex);
 
     // console.log(event.key);
     switch (key) {
       //the list of keys are asdfghjkl
       case 'a':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[0] = true;
+        this.userInformation[userIndex].buttonStates[0] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[0] = false;
+          this.userInformation[userIndex].buttonStates[0] = false;
         }, 500);
         break;
 
       case 's':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[1] = true;
+        this.userInformation[userIndex].buttonStates[1] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[1] = false;
+          this.userInformation[userIndex].buttonStates[1] = false;
         }, 500);
         break;
       case 'd':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[2] = true;
+        this.userInformation[userIndex].buttonStates[2] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[2] = false;
+          this.userInformation[userIndex].buttonStates[2] = false;
         }, 500);
         break;
       case 'f':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[3] = true;
+        this.userInformation[userIndex].buttonStates[3] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[3] = false;
+          this.userInformation[userIndex].buttonStates[3] = false;
         }, 500);
         break;
       case 'g':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[4] = true;
+        this.userInformation[userIndex].buttonStates[4] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[4] = false;
+          this.userInformation[userIndex].buttonStates[4] = false;
         }, 500);
         break;
       case 'h':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[5] = true;
+        this.userInformation[userIndex].buttonStates[5] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[5] = false;
+          this.userInformation[userIndex].buttonStates[5] = false;
         }, 500);
         break;
       case 'j':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[6] = true;
+        this.userInformation[userIndex].buttonStates[6] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[6] = false;
+          this.userInformation[userIndex].buttonStates[6] = false;
         }, 500);
         break;
       case 'k':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[7] = true;
+        this.userInformation[userIndex].buttonStates[7] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[7] = false;
+          this.userInformation[userIndex].buttonStates[7] = false;
         }, 500);
         break;
       case 'l':
         //if the key is pressed change the button state to true
-        this.userInformation[0].buttonStates[8] = true;
+        this.userInformation[userIndex].buttonStates[8] = true;
         setTimeout(() => {
-          this.userInformation[0].buttonStates[8] = false;
+          this.userInformation[userIndex].buttonStates[8] = false;
         }, 500);
         break;
     }
