@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
   
     // Your password
     password: "password",
-    database: "velveteen_db"
+    database: "fourhandpiano"
   });
 
   module.exports = connection;

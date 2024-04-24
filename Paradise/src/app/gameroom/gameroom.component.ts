@@ -462,12 +462,11 @@ this.userInformation = data;
         break;
     }
   }
-}
 
-//on button click save the contents of the pianodiv into a image filw with html2canvas
-function saveImage() {
+  saveImage() {
+  console.log("saveimage")
   //get the piano div
-  var piano:any = document.getElementsByClassName('piano')[0];
+  var piano: any = document.getElementsByClassName('splatCanvass')[0];
   //use html2canvas to save the contents of the piano div to an image file
   html2canvas(piano).then(function (canvas) {
     var a = document.createElement('a');
@@ -481,3 +480,6 @@ function saveImage() {
     a.click();
   });
 }
+}
+
+//on button click save the contents of the pianodiv into a image filw with html2canvas

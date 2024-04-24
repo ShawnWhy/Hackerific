@@ -7,9 +7,7 @@
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const passportControl = require('./config/passport');
 const compression = require("compression");
-
 var express = require("express");
 var bodyParser = require('body-parser');
 
@@ -25,13 +23,13 @@ const { create } = require('domain');
 app.use(
 	session({ secret: "keyboard cat", resave: true, saveUninitialized: true })
   );
-  app.use(passportControl.initialize());
-  app.use(passportControl.session());
+
 // Routes
 // =============================================================
 // require("./routes/api-routes")(app);
 var PORT = process.env.PORT || 8081;
 const server = require("http").createServer(app);
+var db = require("./models");
 
 //socket.io
 //import socket.io
@@ -125,6 +123,10 @@ var users = [];
     }
   }
 
+  //use the server to run both mysql and socket.io
+
+
+
 var io = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:4200",
@@ -172,12 +174,11 @@ setInterval(() => {
   io.emit("generateSplash", generateSplash());
 }, 1500);
 
-
-
-  server.listen(PORT, function() {
+db.sequelize.sync().then(function () {
+  server.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
   });
-
+});
 
 // db.sequelize.sync().then(function() {
 //   server.listen(PORT, function() {

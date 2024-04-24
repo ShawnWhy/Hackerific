@@ -382,3 +382,20 @@ border-radius: 50%;
 .splatClass20 {
     animation: splat20 .2s both
 }
+
+.splatCanvass{
+ position:absolute;
+ height:100%;
+ width:100%;
+
+}
+
+.downloadButton{
+    position:absolute;
+    height:50px;
+    width:70px;
+    top:50px;
+    left:50px;
+    background-color: orange;
+    border-radius:12px;
+}

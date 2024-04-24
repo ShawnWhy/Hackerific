@@ -1,41 +1,34 @@
 // const { Sequelize } = require(".");
 
 module.exports = function(sequelize, DataTypes) {
-  var User_decoration = sequelize.define("User_decoration", {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+  var Painting = sequelize.define("Painting", {
+    id:{
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-
-      // referemce: "User",
-      // referencesKey:"id"
+    string: {
+        type: DataTypes.STRING,
+        allowNull: false,
+  
+        // referemce: "User",
+        // referencesKey:"id"
     },
-    decoration: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-
+    date: {
+      type: DataTypes.INTEGER,
+      allowNull: false, 
+  
       // references: "Item",
       // referencesKey:"id"
-    },
+    }, 
+ 
+    users:{
+      type: DataTypes.STRING,
+      allowNull:false,
+}
 
-    colors: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-
-      // references: "Item",
-      // referencesKey:"id"
-    },
-    background: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-
-    },
   });
-  return User_decoration;
+  return Painting
 }
 
 
