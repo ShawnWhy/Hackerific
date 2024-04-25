@@ -390,7 +390,7 @@ border-radius: 50%;
 
 }
 
-.downloadButton{
+.downloadButton, .saveBottom {
     position:absolute;
     height:50px;
     width:70px;
@@ -398,4 +398,8 @@ border-radius: 50%;
     left:50px;
     background-color: orange;
     border-radius:12px;
+}
+
+.saveBottom{
+    left:150px;
 }

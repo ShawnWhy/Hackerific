@@ -3,9 +3,9 @@ import { ChangeDetectorRef, OnChanges, Component, OnInit } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { NgClass, NgIf } from '@angular/common';
 import { HomeService } from '../home.service';
+import { HttpClient } from '@angular/common/http';
 
 import {
-  
   RouterLink,
   RouterLinkActive,
   RouterOutlet,
@@ -19,6 +19,7 @@ import html2canvas from 'html2canvas';
   selector: 'app-gameroom',
   standalone: true,
   imports: [
+    FormsModule,
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
@@ -34,24 +35,23 @@ export class GameroomComponent implements OnInit {
   socket: any;
   // create a user variable that takes from variables passed from the waiting room
   user: any;
-  constructor(private homeSV: HomeService) {
+
+  paintings: any[] = [];
+  constructor(private homeSV: HomeService, private http: HttpClient) {
     this.socket = io('http://localhost:8081');
     this.homeSV.getCurrentUser().subscribe((user) => {
-       console.log(user);
+      console.log(user);
       //  console.log('comminity page');
       this.user = user;
     });
-    console.log(this.user)
+    console.log(this.user);
     if (this.user.color) {
-      console.log("this.user", this.user)
+      console.log('this.user', this.user);
       // this.createNewUser(this.user);
       this.socket.emit('gameStart', {
         name: this.user.username,
         color: this.user.color,
-        
-
-      })
-
+      });
     }
   }
 
@@ -60,12 +60,10 @@ export class GameroomComponent implements OnInit {
     let newButtonStates = [];
     for (let i = 0; i < 27; i++) {
       newFingerColors.push(this.randomColorBasedOnColor(user.color));
-
     }
 
-    for(let i=0; i<9; i++){
+    for (let i = 0; i < 9; i++) {
       newButtonStates.push(false);
-
     }
     let newUser = {
       name: user.username,
@@ -75,7 +73,6 @@ export class GameroomComponent implements OnInit {
     };
 
     this.userInformation.push(newUser);
-
   }
 
   //create a an array that holds divs, their color, size and position
@@ -112,9 +109,9 @@ export class GameroomComponent implements OnInit {
     //turn the color into rgb values
     let colorRGB = color.match(/\d+/g);
     //create a new color based on the color passed in plus or minis 50 if number is negative, number is 0
-    let random = Math.floor(Math.random() * 100)-50;
-    let random2 = Math.floor(Math.random() * 100)-50;
-    let random3 = Math.floor(Math.random() * 100)-50;
+    let random = Math.floor(Math.random() * 100) - 50;
+    let random2 = Math.floor(Math.random() * 100) - 50;
+    let random3 = Math.floor(Math.random() * 100) - 50;
     let newRed = parseInt(colorRGB[0]) + random;
     let newGreen = parseInt(colorRGB[1]) + random2;
     let newBlue = parseInt(colorRGB[2]) + random3;
@@ -139,7 +136,6 @@ export class GameroomComponent implements OnInit {
     }
     //return a random color
     return `rgb(${newRed}, ${newGreen}, ${newBlue})`;
-
   }
   //create a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
   public generateSplash(data: any) {
@@ -158,32 +154,30 @@ export class GameroomComponent implements OnInit {
 
   //oninit call a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
   ngOnInit() {
+    //after the painting is saved, the server will emit a paintingSaved event, which will trigger the getAllPaintings function
+    //asignal that will trigger all users to get the updated list of paintings
+    this.socket.on('paintingSaved', () => {
+      console.log('paintingSaved');
+      this.getAllPaintings();
+    });
+    //update the list of users to be able to trigger their own piano
     this.socket.on('gameStart', (data: any) => {
-      console.log("data-users", data);
-this.userInformation = data;
+      console.log('data-users', data);
+      this.userInformation = data;
     });
-    this.socket.on('news', (data: any) => {
-      console.log(data);
-      this.socket.emit('my other event', { my: 'data from client' });
-    });
-    //receive news2 event from the server and console log it
-    this.socket.on('news2', (data: any) => {
-      console.log(data);
-    });
+    //this takes the key presses from the server to trigget the html
     this.socket.on('changeHtml', (data: any) => {
       // Trigger a change in the html based on the data received from the server
       console.log('Received data:', data);
       this.pressKey(data.key, data.name);
     });
+    //this generates the splashes for all users
     this.socket.on('generateSplash', (data: any) => {
       // console.log(data);
       this.generateSplash(data);
     });
 
-    // setInterval(() => {
-    //   this.generateSplash();
-    // }, 1500);
-    //on every 1 second call a function that moves the divs in the array left 10px
+    //this makes the splashes move
     setInterval(() => {
       for (let i = 0; i < this.splashes.length; i++) {
         this.moveDivs(
@@ -203,20 +197,20 @@ this.userInformation = data;
     }, 10);
   }
 
-  createSplat(key: any, name:any) {
+  createSplat(key: any, name: any) {
     // console.log(key);
     //for each of the divs with finger class get the x location and height
     var selectedKey;
     //find the index of the user that pressed the key via name attribute
     // find the element that has the id of the name of the user that pressed the key
     var selectedPiano = document.getElementById(name);
-    console.log("selectedPiano", selectedPiano);
-    if(!selectedPiano){
+    console.log('selectedPiano', selectedPiano);
+    if (!selectedPiano) {
       //stop
       console.log('selected piano not found');
       return;
     }
-    
+
     switch (key) {
       case 'a':
         // console.log('key a');
@@ -369,7 +363,10 @@ this.userInformation = data;
 
   //register keypress
   onKeydown(event: any) {
-    this.socket.emit('keyPressed', { key: event.key , name: this.user.username});
+    this.socket.emit('keyPressed', {
+      key: event.key,
+      name: this.user.username,
+    });
     // this.pressKey(event.key);
   }
 
@@ -464,22 +461,83 @@ this.userInformation = data;
   }
 
   saveImage() {
-  console.log("saveimage")
-  //get the piano div
-  var piano: any = document.getElementsByClassName('splatCanvass')[0];
-  //use html2canvas to save the contents of the piano div to an image file
-  html2canvas(piano).then(function (canvas) {
-    var a = document.createElement('a');
+    console.log('saveimage');
+    //get the piano div
+    var piano: any = document.getElementsByClassName('splatCanvass')[0];
+    //use html2canvas to save the contents of the piano div to an image file
+    html2canvas(piano).then(function (canvas) {
+      var a = document.createElement('a');
+      //convert the canvas to a data url
+      var image = canvas.toDataURL('image/png');
+      //set the href of the anchor tag to the data url
+      a.href = image;
+      //set the download attribute of the anchor tag to the image
+      a.download = 'image.png';
+      //click the anchor tag
+      a.click();
+    });
+  }
+
+  public getAllPaintings() {
+    this.http.get<any>('/api/paintings').subscribe({
+      next: (paintings) => {
+        console.log("paintings",paintings);
+        let tempPaintings = paintings;
+        this.paintings = tempPaintings;
+      },
+    });
+  }
+
+
+
+  public savePainting() {
+    
+    //get the piano div
+    let splatbits = this.splatBits;
+    let string = JSON.stringify(splatbits);
+    let users: string = '';
+    for (let i = 0; i < this.userInformation.length; i++) {
+      users += this.userInformation[i].name + ' ';
+    }
+    let date = new Date();
+    //turn date into dd/mm/yyyy format
+    let dateString =
+      date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
+    //use html2canvas to save the contents of the piano div to an image file
+    let newPainting = {
+      string: string,
+      users: users,
+      date: dateString,
+    };
+    console.log("newpainting",newPainting)
+
+    this.http.post('/api/storePainting', newPainting).subscribe({
+      next: (data) => {
+        console.log('storedpainting', data);
+      },
+    });
+
+    this.socket.emit('savePainting');
     //convert the canvas to a data url
-    var image = canvas.toDataURL('image/png');
-    //set the href of the anchor tag to the data url
-    a.href = image;
-    //set the download attribute of the anchor tag to the image
-    a.download = 'image.png';
-    //click the anchor tag
-    a.click();
-  });
-}
+  }
+
+  public selectedNumber: any;
+
+  public deployPainting() {
+    let number = this.selectedNumber
+    console.log('number', number);
+    console.log("deploypaintings");
+    let selectedPaintingObject = this.paintings[number];
+    let selectedPainting = selectedPaintingObject.string;
+    selectedPainting = JSON.parse(selectedPainting);
+    this.splatBits = [];
+    //for each of the selected painting settimeout for .3seconds and push it ito the splatbits array
+    for (let i = 0; i < selectedPainting.length; i++) {
+      setTimeout(() => {
+        this.splatBits.push(selectedPainting[i]);
+      }, i * 300);
+    }
+  }
 }
 
 //on button click save the contents of the pianodiv into a image filw with html2canvas

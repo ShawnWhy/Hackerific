@@ -41,5 +41,7 @@ export class HomeService {
   setCurrentUser(user: any) {
     this.currentUser.next(user);
   }
+
+  
   
 }

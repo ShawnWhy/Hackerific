@@ -2,31 +2,32 @@
 
 module.exports = function(sequelize, DataTypes) {
   var Painting = sequelize.define("Painting", {
-    id:{
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     string: {
-        type: DataTypes.STRING,
-        allowNull: false,
-  
-        // referemce: "User",
-        // referencesKey:"id"
+      //longest datatype for text
+      type: DataTypes.TEXT('long'),
+      // type: DataTypes.TEXT('long'),
+      allowNull: false,
+
+      // referemce: "User",
+      // referencesKey:"id"
     },
     date: {
-      type: DataTypes.INTEGER,
-      allowNull: false, 
-  
+      type: DataTypes.STRING,
+      allowNull: false,
+
       // references: "Item",
       // referencesKey:"id"
-    }, 
- 
-    users:{
-      type: DataTypes.STRING,
-      allowNull:false,
-}
+    },
 
+    users: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
   return Painting
 }

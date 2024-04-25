@@ -40,6 +40,19 @@
 </div>
    <input (keydown)="onKeydown($event)" style = "position:absolute; height:50px; width:100%;top:40px">
 <div class = "downloadButton" (click)="saveImage()">Download Image</div>
+<div class = "saveBottom" (click)="savePainting()">Save Painting</div>
+
+<div id="paintingList">
+  <form (ngSubmit)="deployPainting()">
+    <select name="painting" id="painting" [(ngModel)]="selectedNumber">
+      <option *ngFor="let painting of paintings" 
+      [value]="painting.id">{{painting.names}} {{painting.date}}
+    </option>
+    </select>
+
+
+  </form>
+</div>
 
   <!-- for each of the userinfomration.buttonStates, generate a div with the class of key, and a id of it index and a class that correspond with the buttonStates, if the state is true class = true if false, false -->
 
