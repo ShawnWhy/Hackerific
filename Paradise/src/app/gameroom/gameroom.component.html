@@ -44,12 +44,13 @@
 
 <div id="paintingList">
   <form (ngSubmit)="deployPainting()">
-    <select name="painting" id="painting" [(ngModel)]="selectedNumber">
+    <select name="paintings" id="paintings" [(ngModel)]="selectedNumber">
       <option *ngFor="let painting of paintings" 
-      [value]="painting.id">{{painting.names}} {{painting.date}}
+      [value]="painting.id">{{painting.users}} {{painting.date}}
     </option>
-    </select>
 
+    </select>
+<input style="position:absolute; top:50px" type="submit" value="Deploy Painting">
 
   </form>
 </div>

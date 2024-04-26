@@ -403,3 +403,8 @@ border-radius: 50%;
 .saveBottom{
     left:150px;
 }
+
+#paintings{
+    position:absolute;
+    z-index: 9999;
+}

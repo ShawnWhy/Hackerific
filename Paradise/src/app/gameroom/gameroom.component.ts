@@ -154,6 +154,8 @@ export class GameroomComponent implements OnInit {
 
   //oninit call a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
   ngOnInit() {
+
+    this.getAllPaintings()
     //after the painting is saved, the server will emit a paintingSaved event, which will trigger the getAllPaintings function
     //asignal that will trigger all users to get the updated list of paintings
     this.socket.on('paintingSaved', () => {
@@ -535,9 +537,11 @@ export class GameroomComponent implements OnInit {
     for (let i = 0; i < selectedPainting.length; i++) {
       setTimeout(() => {
         this.splatBits.push(selectedPainting[i]);
-      }, i * 300);
+      }, i * 10);
     }
   }
+
+  
 }
 
 //on button click save the contents of the pianodiv into a image filw with html2canvas
