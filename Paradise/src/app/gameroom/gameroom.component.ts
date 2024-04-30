@@ -77,8 +77,8 @@ export class GameroomComponent implements OnInit {
 
   //create a an array that holds divs, their color, size and position
   splashes: any[] = [
-    { color: 'red', size: 10, position: { x: 0, y: 0 }, state: 'bullet' },
-    { color: 'blue', size: 20, position: { x: 0, y: 0 }, state: 'bullet' },
+    { color: 'red', size: 10, position: { x: 0, y: 0 }, state: 'bullet' , speed:1,},
+    { color: 'blue', size: 20, position: { x: 0, y: 0 }, state: 'bullet', speed:10 },
   ];
   //create a function that will move the divs in the array
   moveDivs(positionX: number, positionY: number, index: number) {
@@ -149,6 +149,7 @@ export class GameroomComponent implements OnInit {
       size: data.size,
       position: { x: -150, y: randomHeight },
       state: 'bullet',
+      speed:data.speed
     });
   }
 
@@ -175,7 +176,7 @@ export class GameroomComponent implements OnInit {
     });
     //this generates the splashes for all users
     this.socket.on('generateSplash', (data: any) => {
-      // console.log(data);
+      console.log(data);
       this.generateSplash(data);
     });
 
@@ -183,7 +184,7 @@ export class GameroomComponent implements OnInit {
     setInterval(() => {
       for (let i = 0; i < this.splashes.length; i++) {
         this.moveDivs(
-          this.splashes[i].position.x + 50,
+          this.splashes[i].position.x + (50*this.splashes[i].speed),
           this.splashes[i].position.y,
           i
         );

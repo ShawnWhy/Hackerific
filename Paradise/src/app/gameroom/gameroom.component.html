@@ -38,21 +38,26 @@
    [ngStyle]="{'background-color': splat.color, 'left.px': splat.left, 'top.px': splat.top, 'height.px': splat.size, 'width.px': splat.size, 'border-radius':splat.borderRadius }"></div>
    <!-- <div *ngFor="let splat of splatBits"  [ngStyle]="{'background-color': splat.color, 'left.px': splat.left, 'top.px': splat.top, 'height.px': splat.size, 'width.px': splat.size, 'border-radius':splat.borderRadius }"></div> -->
 </div>
-   <input (keydown)="onKeydown($event)" style = "position:absolute; height:50px; width:100%;top:40px">
-<div class = "downloadButton" (click)="saveImage()">Download Image</div>
+
+<div id="buttonDiv">
+     <input id="keyDown" (keydown)="onKeydown($event)">
+
+   <div class = "downloadButton" (click)="saveImage()">Download Image</div>
 <div class = "saveBottom" (click)="savePainting()">Save Painting</div>
 
 <div id="paintingList">
-  <form (ngSubmit)="deployPainting()">
+  <form id= "paintingsForm" (ngSubmit)="deployPainting()">
     <select name="paintings" id="paintings" [(ngModel)]="selectedNumber">
       <option *ngFor="let painting of paintings" 
       [value]="painting.id">{{painting.users}} {{painting.date}}
     </option>
 
     </select>
-<input style="position:absolute; top:50px" type="submit" value="Deploy Painting">
+<input id = "deployPainting" style="" type="submit" value="Deploy Painting">
 
   </form>
+</div>
+
 </div>
 
   <!-- for each of the userinfomration.buttonStates, generate a div with the class of key, and a id of it index and a class that correspond with the buttonStates, if the state is true class = true if false, false -->

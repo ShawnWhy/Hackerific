@@ -11,20 +11,19 @@
 
 <main class="main">
 <!-- create a sign in component that is full screen and has a name input and a color pick input, once both inputs are submited it takes one to the gameroom component -->
-on submit this form will trigger the submit event in angular
-<form (ngSubmit)="joinGame()" >
+<form id="submitForm"(ngSubmit)="joinGame()" >
   <h1>Sign In</h1>
-  <p>Enter your name and pick a color to get started.</p>
+  <p id="instr">Enter your name and pick a color to get started.</p>
 <div class="form-group">
-    <label for="name">Name</label>
-    <input name = "username" [(ngModel)]="newUsername" type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter name">
+    <label id = "nameLable" for="name">Name</label>
+    <input id = "nameInput" name = "username" [(ngModel)]="newUsername" type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter name">
     <small id="nameHelp" class="form-text text-muted">Please enter your name.</small>
   </div>
   <div>
-    <label for="color" >Color</label>
+    <label id = "colorLable" for="color" >Color</label>
         <!-- have this input to return rgb(0,0,0) -->
 
-<input [(ngModel)]="newColor" name = "colorpick" type="color" class="form-control" id="color" aria-describedby="colorHelp" placeholder="Enter color">
+<input id="colorInput" [(ngModel)]="newColor" name = "colorpick" type="color" class="form-control" id="color" aria-describedby="colorHelp" placeholder="Enter color">
    
     <small id="colorHelp" class="form-text text-muted">Please enter your color.</small>
   </div>

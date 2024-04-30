@@ -1,0 +1,37 @@
+form{
+        height: 40%;
+    width: 40%;
+    margin: auto;
+    background: #f8d771;
+    padding: 50px;
+    border-radius: 20px;
+    animation:dropdown .5s linear both;
+}
+
+form input{
+   
+    margin: 5px;
+    border-radius: 5px;
+    padding: 5px;
+
+}
+@keyframes dropdown {
+
+    0%{
+        transform:translateY(-100%)
+    }
+
+    90%{
+        transform:translateY(10%)
+        
+    }
+
+    95%{
+        transform:translateY(-5%)
+    }
+
+    100%{
+        transform:translateY(0%)
+    }
+    
+}

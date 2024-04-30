@@ -390,21 +390,53 @@ border-radius: 50%;
 
 }
 
-.downloadButton, .saveBottom {
-    position:absolute;
+.downloadButton, .saveBottom, #deployPainting,#keyDown {
+    position:relative;
     height:50px;
     width:70px;
-    top:50px;
-    left:50px;
+
     background-color: orange;
     border-radius:12px;
+    margin:20px;
+    text-align: center;
+    padding:10px;
 }
 
 .saveBottom{
-    left:150px;
+    /* left:150px; */
 }
 
 #paintings{
-    position:absolute;
+
     z-index: 9999;
+}
+
+#buttonDiv{
+    position:absolute;
+    display: flex;
+    top:-80px
+}
+#keyDown{
+    width:60px; 
+}
+#keyDown:focus{
+    width:60px;
+    background-color: lightblue;
+}
+#paintingsForm{
+    position:relative;
+    display: flex;
+    flex-direction: row;
+}
+#paintingsForm input, #paintingsForm select{
+    
+}
+
+ #paintingsForm select{
+    height:50px;
+    width:150px;
+    border-radius:12px;
+    margin-top:20px;
+    padding:10px;
+    
 }

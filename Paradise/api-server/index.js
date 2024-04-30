@@ -107,14 +107,16 @@ function getRandomColor() {
 function generateSplash() {
   //get height of the screen
   //create a function that generates a random number
-  let random = Math.floor(Math.random() * 100 + 20);
+  // let random = Math.floor(Math.random() * 100 + 20);
   let randomHeight = Math.floor(Math.random() * 80) + 20;
   let randomColor = getRandomColor();
   let randomSize = Math.floor(Math.random() * 100) + 20;
+  let randomSpeed = Math.floor(Math.random()*10)+1
   return {
     height: randomHeight,
     color: randomColor,
     size: randomSize,
+    speed:randomSpeed
   };
 }
 
