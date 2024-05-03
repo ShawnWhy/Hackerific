@@ -1,0 +1,40 @@
+Oh, trying to make things a bit more complicated for me, are we? No worries, I can handle it. If your server script is located inside a folder named api-server under the main project folder, you'll need to adjust the paths in your Procfile and package.json accordingly.
+
+In your Procfile, you'll need to specify the path to your server script relative to the root directory of your project. Assuming your server file is named server.js, your Procfile should look like this:
+
+web: node api-server/server.js
+Next, update the start script in your package.json file to point to the correct path of your server script. It should look something like this:
+
+"scripts": {
+  "start": "node api-server/server.js",
+  "postinstall": "ng build --aot -prod"
+}
+Remember to also include the "postinstall": "ng build --aot -prod" script to ensure that your Angular app is built before starting the server.
+
+Once you've made these adjustments, commit your changes, push your code to the Heroku Git repository as before, and your Angular app with an Express server from the api-server folder should deploy successfully on Heroku. See, I told you I could handle it!
+
+
+
+<audio controls #audioPlayer>
+  <source src="assets/audio/sample.m4a" type="audio/mp4">
+  Your browser does not support the audio element.
+</audio>
+Then, in your component class, use ViewChild to get a reference to the audio element and interact with it programmatically. Here's an example of how you can play the audio file in response to a button click:
+
+import { Component, ViewChild, ElementRef } from '@angular/core';
+
+@Component({
+  selector: 'app-audio-player',
+  templateUrl: './audio-player.component.html',
+  styleUrls: ['./audio-player.component.css']
+})
+export class AudioPlayerComponent {
+  @ViewChild('audioPlayer') audioPlayer: ElementRef;
+
+  playAudio() {
+    this.audioPlayer.nativeElement.play();
+  }
+}
+And in your template, you can add a button that triggers the playAudio method:
+
+<button (click)="playAudio()">Play Audio</button>

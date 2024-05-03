@@ -1,9 +1,10 @@
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef, OnChanges, Component, OnInit } from '@angular/core';
+import { ViewChild, ElementRef, ChangeDetectorRef, OnChanges, Component, OnInit } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { NgClass, NgIf } from '@angular/common';
 import { HomeService } from '../home.service';
 import { HttpClient } from '@angular/common/http';
+
 
 import {
   RouterLink,
@@ -14,6 +15,7 @@ import {
 import { gsap } from 'gsap';
 import { io } from 'socket.io-client';
 import html2canvas from 'html2canvas';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-gameroom',
@@ -32,6 +34,62 @@ import html2canvas from 'html2canvas';
   styleUrl: './gameroom.component.css',
 })
 export class GameroomComponent implements OnInit {
+  @ViewChild('audioPlayerc4', { static: false }) audioPlayerc4!: ElementRef;
+
+  playAudioc4() {
+    this.audioPlayerc4.nativeElement.play();
+  }
+  @ViewChild('audioPlayerd4', { static: false }) audioPlayerd4!: ElementRef;
+
+  playAudiod4() {
+    this.audioPlayerd4.nativeElement.play();
+  }
+
+  @ViewChild('audioPlayere4', { static: false }) audioPlayere4!: ElementRef;
+
+  playAudioe4() {
+    this.audioPlayere4.nativeElement.play();
+  }
+
+  @ViewChild('audioPlayerf4', { static: false }) audioPlayerf4!: ElementRef;
+
+  playAudiof4() {
+    this.audioPlayerf4.nativeElement.play();
+  }
+
+  @ViewChild('audioPlayerg4', { static: false }) audioPlayerg4!: ElementRef;
+
+  playAudiog4() {
+    this.audioPlayerg4.nativeElement.play();
+  }
+  @ViewChild('audioPlayerc5', { static: false }) audioPlayerc5!: ElementRef;
+
+  playAudioc5() {
+    this.audioPlayerc5.nativeElement.play();
+  }
+  @ViewChild('audioPlayerd5', { static: false }) audioPlayerd5!: ElementRef;
+
+  playAudiod5() {
+    this.audioPlayerc4.nativeElement.play();
+  }
+  @ViewChild('audioPlayere5', { static: false }) audioPlayere5!: ElementRef;
+
+  playAudioe5() {
+    this.audioPlayere5.nativeElement.play();
+  }
+  @ViewChild('audioPlayergflat', { static: false }) audioPlayergflat!: ElementRef;
+
+  playAudiogflat() {
+    this.audioPlayergflat.nativeElement.play();
+  }
+  @ViewChild('audioPlayerpop1', { static: false }) audioPlayerpop!: ElementRef;
+
+  playAudiocpop() {
+    this.audioPlayerpop.nativeElement.play();
+  }
+
+
+
   socket: any;
   // create a user variable that takes from variables passed from the waiting room
   user: any;
@@ -77,8 +135,20 @@ export class GameroomComponent implements OnInit {
 
   //create a an array that holds divs, their color, size and position
   splashes: any[] = [
-    { color: 'red', size: 10, position: { x: 0, y: 0 }, state: 'bullet' , speed:1,},
-    { color: 'blue', size: 20, position: { x: 0, y: 0 }, state: 'bullet', speed:10 },
+    {
+      color: 'red',
+      size: 10,
+      position: { x: 0, y: 0 },
+      state: 'bullet',
+      speed: 1,
+    },
+    {
+      color: 'blue',
+      size: 20,
+      position: { x: 0, y: 0 },
+      state: 'bullet',
+      speed: 10,
+    },
   ];
   //create a function that will move the divs in the array
   moveDivs(positionX: number, positionY: number, index: number) {
@@ -149,14 +219,13 @@ export class GameroomComponent implements OnInit {
       size: data.size,
       position: { x: -150, y: randomHeight },
       state: 'bullet',
-      speed:data.speed
+      speed: data.speed,
     });
   }
 
   //oninit call a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
   ngOnInit() {
-
-    this.getAllPaintings()
+    this.getAllPaintings();
     //after the painting is saved, the server will emit a paintingSaved event, which will trigger the getAllPaintings function
     //asignal that will trigger all users to get the updated list of paintings
     this.socket.on('paintingSaved', () => {
@@ -184,7 +253,7 @@ export class GameroomComponent implements OnInit {
     setInterval(() => {
       for (let i = 0; i < this.splashes.length; i++) {
         this.moveDivs(
-          this.splashes[i].position.x + (50*this.splashes[i].speed),
+          this.splashes[i].position.x + 50 * this.splashes[i].speed,
           this.splashes[i].position.y,
           i
         );
@@ -217,34 +286,44 @@ export class GameroomComponent implements OnInit {
     switch (key) {
       case 'a':
         // console.log('key a');
+        this.playAudioc4();
         selectedKey = selectedPiano.getElementsByClassName('key')[0];
         break;
       case 's':
+        this.playAudiod4();
         selectedKey = selectedPiano.getElementsByClassName('key')[1];
         break;
       case 'd':
+        this.playAudioe4();
         // console.log('key d');
         selectedKey = selectedPiano.getElementsByClassName('key')[2];
         break;
       case 'f':
+        this.playAudiof4();
         selectedKey = selectedPiano.getElementsByClassName('key')[3];
         break;
       case 'g':
+        this.playAudiog4();
         selectedKey = selectedPiano.getElementsByClassName('key')[4];
         break;
       case 'h':
+        this.playAudioc5
         selectedKey = selectedPiano.getElementsByClassName('key')[5];
         break;
       case 'j':
+        this.playAudiod5();
         selectedKey = selectedPiano.getElementsByClassName('key')[6];
         break;
       case 'k':
+        this.playAudioe5();
         selectedKey = selectedPiano.getElementsByClassName('key')[7];
         break;
       case 'l':
+        this.playAudiogflat();
         selectedKey = selectedPiano.getElementsByClassName('key')[8];
         break;
       default:
+        this.playAudioc4();
         selectedKey = selectedPiano.getElementsByClassName('key')[0];
     }
     // console.log(selectedKey);
@@ -274,6 +353,7 @@ export class GameroomComponent implements OnInit {
           y > 36
           // && (positiony+size >=y && positiony <= y)
         ) {
+          this.playAudiocpop();
           for (let h = 0; h < 5; h++) {
             //create a object with the attrbutes, color, size, border radius, top and left values
             let fingercolor = window.getComputedStyle(
@@ -484,17 +564,14 @@ export class GameroomComponent implements OnInit {
   public getAllPaintings() {
     this.http.get<any>('/api/paintings').subscribe({
       next: (paintings) => {
-        console.log("paintings",paintings);
+        console.log('paintings', paintings);
         let tempPaintings = paintings;
         this.paintings = tempPaintings;
       },
     });
   }
 
-
-
   public savePainting() {
-    
     //get the piano div
     let splatbits = this.splatBits;
     let string = JSON.stringify(splatbits);
@@ -512,7 +589,7 @@ export class GameroomComponent implements OnInit {
       users: users,
       date: dateString,
     };
-    console.log("newpainting",newPainting)
+    console.log('newpainting', newPainting);
 
     this.http.post('/api/storePainting', newPainting).subscribe({
       next: (data) => {
@@ -527,9 +604,9 @@ export class GameroomComponent implements OnInit {
   public selectedNumber: any;
 
   public deployPainting() {
-    let number = this.selectedNumber
+    let number = this.selectedNumber;
     console.log('number', number);
-    console.log("deploypaintings");
+    console.log('deploypaintings');
     let selectedPaintingObject = this.paintings[number];
     let selectedPainting = selectedPaintingObject.string;
     selectedPainting = JSON.parse(selectedPainting);
@@ -541,8 +618,6 @@ export class GameroomComponent implements OnInit {
       }, i * 10);
     }
   }
-
-  
 }
 
 //on button click save the contents of the pianodiv into a image filw with html2canvas
