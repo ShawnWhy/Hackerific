@@ -26,7 +26,7 @@ module.exports = function (app) {
     db.Painting.findAll({
       order: [["id", "DESC"]],
     }).then(function (result) {
-      console.log(result);
+      // console.log(result);
       res.json(result);
     });
   });

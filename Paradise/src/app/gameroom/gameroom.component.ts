@@ -1,10 +1,16 @@
 import { FormsModule } from '@angular/forms';
-import { ViewChild, ElementRef, ChangeDetectorRef, OnChanges, Component, OnInit } from '@angular/core';
+import {
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+  OnChanges,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { NgClass, NgIf } from '@angular/common';
 import { HomeService } from '../home.service';
 import { HttpClient } from '@angular/common/http';
-
 
 import {
   RouterLink,
@@ -36,59 +42,38 @@ import { ThisReceiver } from '@angular/compiler';
 export class GameroomComponent implements OnInit {
   @ViewChild('audioPlayerc4', { static: false }) audioPlayerc4!: ElementRef;
 
-  playAudioc4() {
-    this.audioPlayerc4.nativeElement.play();
+  playAudio(audio: any) {
+    audio.nativeElement.play();
+    setTimeout(() => {
+      audio.nativeElement.pause();
+      audio.nativeElement.currentTime = 0;
+    }, 400);
   }
-  @ViewChild('audioPlayerd4', { static: false }) audioPlayerd4!: ElementRef;
 
-  playAudiod4() {
-    this.audioPlayerd4.nativeElement.play();
-  }
+  @ViewChild('audioPlayerd4', { static: false }) audioPlayerd4!: ElementRef;
 
   @ViewChild('audioPlayere4', { static: false }) audioPlayere4!: ElementRef;
 
-  playAudioe4() {
-    this.audioPlayere4.nativeElement.play();
-  }
-
   @ViewChild('audioPlayerf4', { static: false }) audioPlayerf4!: ElementRef;
-
-  playAudiof4() {
-    this.audioPlayerf4.nativeElement.play();
-  }
 
   @ViewChild('audioPlayerg4', { static: false }) audioPlayerg4!: ElementRef;
 
-  playAudiog4() {
-    this.audioPlayerg4.nativeElement.play();
-  }
   @ViewChild('audioPlayerc5', { static: false }) audioPlayerc5!: ElementRef;
 
-  playAudioc5() {
-    this.audioPlayerc5.nativeElement.play();
-  }
   @ViewChild('audioPlayerd5', { static: false }) audioPlayerd5!: ElementRef;
 
-  playAudiod5() {
-    this.audioPlayerc4.nativeElement.play();
-  }
   @ViewChild('audioPlayere5', { static: false }) audioPlayere5!: ElementRef;
 
-  playAudioe5() {
-    this.audioPlayere5.nativeElement.play();
-  }
-  @ViewChild('audioPlayergflat', { static: false }) audioPlayergflat!: ElementRef;
+  @ViewChild('audioPlayergflat', { static: false })
+  audioPlayergflat!: ElementRef;
 
-  playAudiogflat() {
-    this.audioPlayergflat.nativeElement.play();
-  }
   @ViewChild('audioPlayerpop1', { static: false }) audioPlayerpop!: ElementRef;
 
+  public backgroundcolor: any = 'rgb(255, 255, 255)';
+  public extraColors :any[] = [];
   playAudiocpop() {
     this.audioPlayerpop.nativeElement.play();
   }
-
-
 
   socket: any;
   // create a user variable that takes from variables passed from the waiting room
@@ -175,6 +160,60 @@ export class GameroomComponent implements OnInit {
     return `rgb(${random}, ${random2}, ${random3})`;
   }
 
+  averageColor(colors: any[]) {
+    //average the rgb values of the user color in rgb values
+    let tempColor = colors[0];
+    let number = 0;
+    for (let i = 0; i < colors.length; i++) {
+      let color = colors[i];
+      let tempRGB = tempColor.match(/\d+/g);
+      let colorRGB = color.match(/\d+/g);
+      let newColor = `rgb(${
+        parseInt(colorRGB[0]) + parseInt(tempRGB[0]) / 2
+      }, ${parseInt(colorRGB[1]) + parseInt(tempRGB[1]) / 2}, ${
+        parseInt(colorRGB[2]) + parseInt(tempRGB[2]) / 2
+      })`;
+      tempColor = newColor;
+      number++;
+      if (number >= colors.length) {
+        return tempColor;
+      }
+    }
+  }
+
+  averageColor2(colors: any[]) {
+    //average the rgb values of the user color in rgb values
+    let tempR = 0
+    let tempG = 0
+    let tempB = 0
+    let number = 0;
+    let newColor=colors[0];
+    for (let i = 0; i < colors.length; i++) {
+      let color = colors[i];
+       let colorRGB = color.match(/\d+/g);
+       tempR += parseInt(colorRGB[0])
+       tempG += parseInt(colorRGB[1])
+       tempB += parseInt(colorRGB[2])
+        
+      number++;
+
+      if (number >= colors.length) {
+           newColor = `rgb(${
+             
+             Math.floor(tempR / colors.length)
+           }, ${
+             
+             Math.floor(tempG / colors.length)
+           }, ${
+             
+             Math.floor(tempB / colors.length)
+           })`;
+        return newColor;
+      }
+    }
+    
+  }
+
   public randomColorBasedOnColor(color: any) {
     //turn the color into rgb values
     let colorRGB = color.match(/\d+/g);
@@ -232,10 +271,43 @@ export class GameroomComponent implements OnInit {
       console.log('paintingSaved');
       this.getAllPaintings();
     });
+    this.socket.on('updateUsers', (data: any) => {
+      console.log('updateUsers', data);
+      this.userInformation = data;
+      let colors = [];
+      for (let i = 0; i < this.userInformation.length; i++) {
+        colors.push(this.userInformation[i].color);
+      }
+      if (this.backgroundcolor !== "rgb(255, 255, 255)"){
+        colors.push(this.backgroundcolor);
+      }
+      this.backgroundcolor = this.averageColor2(colors);
+    });
     //update the list of users to be able to trigger their own piano
     this.socket.on('gameStart', (data: any) => {
-      console.log('data-users', data);
+      // console.log('data-users', data);
       this.userInformation = data;
+      //avverage the colors
+      //get the array of colors
+      let colors = [];
+      for (let i = 0; i < this.userInformation.length; i++) {
+        colors.push(this.userInformation[i].color);
+      }
+         if (this.backgroundcolor !== 'rgb(255, 255, 255)') {
+           colors.push(this.backgroundcolor);
+         }
+      this.backgroundcolor = this.averageColor2(colors);
+      // let tempColor = this.userInformation[0].color;
+      // //average the rgb values of the user color in rgb values
+      // for (let i = 0; i < this.userInformation.length; i++) {
+      //   let user = this.userInformation[i];
+      //   let color = user.color;
+      //   let colorRGB = color.match(/\d+/g);
+      //   let newColor = `rgb(${parseInt(colorRGB[0]) / 2}, ${
+      //     parseInt(colorRGB[1]) / 2
+      //   }, ${parseInt(colorRGB[2]) / 2})`;
+      //   this.userInformation[i].color = newColor;
+      // }
     });
     //this takes the key presses from the server to trigget the html
     this.socket.on('changeHtml', (data: any) => {
@@ -286,44 +358,44 @@ export class GameroomComponent implements OnInit {
     switch (key) {
       case 'a':
         // console.log('key a');
-        this.playAudioc4();
+        this.playAudio(this.audioPlayerc4);
         selectedKey = selectedPiano.getElementsByClassName('key')[0];
         break;
       case 's':
-        this.playAudiod4();
+        this.playAudio(this.audioPlayerd4);
         selectedKey = selectedPiano.getElementsByClassName('key')[1];
         break;
       case 'd':
-        this.playAudioe4();
+        this.playAudio(this.audioPlayere4);
         // console.log('key d');
         selectedKey = selectedPiano.getElementsByClassName('key')[2];
         break;
       case 'f':
-        this.playAudiof4();
+        this.playAudio(this.audioPlayerf4);
         selectedKey = selectedPiano.getElementsByClassName('key')[3];
         break;
       case 'g':
-        this.playAudiog4();
+        this.playAudio(this.audioPlayerg4);
         selectedKey = selectedPiano.getElementsByClassName('key')[4];
         break;
       case 'h':
-        this.playAudioc5
+        this.playAudio(this.audioPlayerc5);
         selectedKey = selectedPiano.getElementsByClassName('key')[5];
         break;
       case 'j':
-        this.playAudiod5();
+        this.playAudio(this.audioPlayerd5);
         selectedKey = selectedPiano.getElementsByClassName('key')[6];
         break;
       case 'k':
-        this.playAudioe5();
+        this.playAudio(this.audioPlayere5);
         selectedKey = selectedPiano.getElementsByClassName('key')[7];
         break;
       case 'l':
-        this.playAudiogflat();
+        this.playAudio(this.audioPlayergflat);
         selectedKey = selectedPiano.getElementsByClassName('key')[8];
         break;
       default:
-        this.playAudioc4();
+        this.playAudio(this.audioPlayerc4);
         selectedKey = selectedPiano.getElementsByClassName('key')[0];
     }
     // console.log(selectedKey);
@@ -359,6 +431,16 @@ export class GameroomComponent implements OnInit {
             let fingercolor = window.getComputedStyle(
               finger[i]
             ).backgroundColor;
+
+            let colors = [];
+            for (let i = 0; i < this.userInformation.length; i++) {
+              colors.push(this.userInformation[i].color);
+            }
+            colors.push(fingercolor);
+               if (this.backgroundcolor !== 'rgb(255, 255, 255)') {
+                 colors.push(this.backgroundcolor);
+               }
+            this.backgroundcolor=this.averageColor2(colors);
             let splashcolor = this.splashes[j].color;
             // get the individual rgb values from both the finger and splash div
             let fingerRGB = fingercolor.match(/\d+/g);
@@ -589,15 +671,16 @@ export class GameroomComponent implements OnInit {
       users: users,
       date: dateString,
     };
+    this.paintings.push(newPainting);
     console.log('newpainting', newPainting);
 
     this.http.post('/api/storePainting', newPainting).subscribe({
       next: (data) => {
         console.log('storedpainting', data);
+        this.socket.emit('savePainting');
       },
     });
 
-    this.socket.emit('savePainting');
     //convert the canvas to a data url
   }
 
@@ -607,7 +690,14 @@ export class GameroomComponent implements OnInit {
     let number = this.selectedNumber;
     console.log('number', number);
     console.log('deploypaintings');
-    let selectedPaintingObject = this.paintings[number];
+    // let selectedPaintingObject = this.paintings[number];
+    let selectedPaintingObjectArray = this.paintings.filter((painting) => {
+      return painting.id == number;
+    });
+    console.log('selectedPaintingObjectArray', selectedPaintingObjectArray);
+    let selectedPaintingObject: any = selectedPaintingObjectArray[0];
+
+    console.log('selectedPaintingObject', selectedPaintingObject);
     let selectedPainting = selectedPaintingObject.string;
     selectedPainting = JSON.parse(selectedPainting);
     this.splatBits = [];

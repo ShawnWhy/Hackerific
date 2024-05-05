@@ -1,4 +1,4 @@
-<div class="gameroomContainer" >
+<div class="gameroomContainer" [ngStyle]="{'background':backgroundcolor}">
 <style>
   
 </style>
@@ -48,6 +48,7 @@
 <div id="paintingList">
   <form id= "paintingsForm" (ngSubmit)="deployPainting()">
     <select name="paintings" id="paintings" [(ngModel)]="selectedNumber">
+      <option value=''selected="selected" >Select a Painting</option>
       <option *ngFor="let painting of paintings" 
       [value]="painting.id">{{painting.users}} {{painting.date}}
     </option>
@@ -95,15 +96,17 @@
   Your browser does not support the audio element.
 </audio>
 
-<audio controls #audioPlayergflat>
-  <source src="assets/gflat.m4a" type="audio/mp4">
-  Your browser does not support the audio element.
-</audio>
 
 <audio controls #audioPlayerpop1>
   <source src="assets/pop1.mp3" type="audio/mp4">
   Your browser does not support the audio element.
 </audio>
+
+<div *ngFor="let user of userInformation">
+  <div class="user" [ngStyle]="{'background-color': user.color}">
+    <div class="userName">{{user.name}}</div>
+  </div>
+  </div>
 
 </div>
 
