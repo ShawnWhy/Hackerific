@@ -1,2 +1,4 @@
 dist/
 node_modules/
+api-server/config/config.json
+api-server/routes/connection.js
