@@ -15,9 +15,9 @@ const path = require("path");
 // Sets up the Express App
 // =============================================================
 var app = express();
-app.use(express.static(path.join(__dirname, "dist/paradise")));
+app.use(express.static(path.join(__dirname, "../dist/paradise/browser")));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist/paradise/index.html"));
+  res.sendFile(path.join(__dirname, "../dist/paradise/browser/index.html"));
 });
 
 app.use(express.urlencoded({ extended: false }));
