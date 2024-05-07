@@ -654,6 +654,7 @@ export class GameroomComponent implements OnInit {
   }
 
   public savePainting() {
+    if(this.splatBits.length>10){
     //get the piano div
     let splatbits = this.splatBits;
     let string = JSON.stringify(splatbits);
@@ -683,6 +684,11 @@ export class GameroomComponent implements OnInit {
 
     //convert the canvas to a data url
   }
+  else{
+    alert('Please create a painting with more than 10 splats before saving')
+  
+  }
+}
 
   public selectedNumber: any;
 

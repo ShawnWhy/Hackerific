@@ -1,6 +1,12 @@
-Oh, trying to make things a bit more complicated for me, are we? No worries, I can handle it. If your server script is located inside a folder named api-server under the main project folder, you'll need to adjust the paths in your Procfile and package.json accordingly.
+Oh, trying to make things a bit more complicated for me, are we? 
+No worries, I can handle it. If your server script is located inside 
+a folder named api-server under the main project folder, 
+you'll need to adjust the paths in your Procfile and package.json accordingly.
 
-In your Procfile, you'll need to specify the path to your server script relative to the root directory of your project. Assuming your server file is named server.js, your Procfile should look like this:
+In your Procfile, 
+you'll need to specify the path to your server script 
+relative to the root directory of your project. 
+Assuming your server file is named server.js, your Procfile should look like this:
 
 web: node api-server/server.js
 Next, update the start script in your package.json file to point to the correct path of your server script. It should look something like this:
