@@ -2,7 +2,7 @@
   "name": "paradise",
   "version": "0.0.0",
   "scripts": {
-    "start": "node api-server/server.js",
+    "start": "node api-server/index.js",
     "postinstall": "ng build --aot -prod",
     "ng": "ng",
     "startng": "ng serve",

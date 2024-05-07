@@ -10,10 +10,16 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const compression = require("compression");
 var express = require("express");
 var bodyParser = require("body-parser");
+const path = require("path");
 
 // Sets up the Express App
 // =============================================================
 var app = express();
+app.use(express.static(path.join(__dirname, "dist/paradise")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist/paradise/index.html"));
+});
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(compression());
