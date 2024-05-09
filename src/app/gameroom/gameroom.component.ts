@@ -644,6 +644,7 @@ export class GameroomComponent implements OnInit {
   }
 
   public getAllPaintings() {
+    console.log("get paintings");
     this.http.get<any>('/api/paintings').subscribe({
       next: (paintings) => {
         console.log('paintings', paintings);
