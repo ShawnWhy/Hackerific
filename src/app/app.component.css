@@ -30,4 +30,13 @@ border-radius: 50%;
     TEXT-ALIGN: CENTER;
     PADDING: 1%;
     FONT-SIZE: XXX-LARGE;
+    display:none;
+}
+
+body{
+    margin:0px ! important;
+    overflow: hidden;
+}
+.main{
+    overflow: hidden;
 }

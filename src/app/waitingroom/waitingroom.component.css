@@ -35,3 +35,8 @@ form input{
     }
     
 }
+
+.main{
+    position:relative;
+    top:20%;
+}

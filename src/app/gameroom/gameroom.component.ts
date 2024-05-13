@@ -80,7 +80,7 @@ export class GameroomComponent implements OnInit {
   user: any;
 
   paintings: any[] = [];
-  constructor(private homeSV: HomeService, private http: HttpClient) {
+  constructor(private homeSV: HomeService, private http: HttpClient, private router: Router) {
     this.socket = io('http://localhost:8081');
     this.homeSV.getCurrentUser().subscribe((user) => {
       console.log(user);
@@ -96,6 +96,9 @@ export class GameroomComponent implements OnInit {
         color: this.user.color,
       });
     }
+    //else redirect to the waiting room
+    else{
+    this.router.navigate(['/waitingroom'])      }
   }
 
   createNewUser(user: any) {

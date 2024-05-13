@@ -54,56 +54,56 @@
     </option>
 
     </select>
-<input id = "deployPainting" style="" type="submit" value="Deploy Painting">
+<button id = "deployPainting" style="" type="submit">Deploy Painting</button>
 
   </form>
 </div>
 
 <audio controls #audioPlayerc4>
-  <source src="assets/c4.m4a" type="audio/mp4">
+  <source src="assets/c3.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 <audio controls #audioPlayerd4>
-  <source src="assets/d4.m4a" type="audio/mp4">
+  <source src="assets/d3.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 <audio controls #audioPlayere4>
-  <source src="assets/e4.m4a" type="audio/mp4">
+  <source src="assets/e3.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 <audio controls #audioPlayerf4>
-  <source src="assets/f4.m4a" type="audio/mp4">
+  <source src="assets/f3.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 <audio controls #audioPlayerg4>
-  <source src="assets/g4.m4a" type="audio/mp4">
+  <source src="assets/g3.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 <audio controls #audioPlayerc5>
-  <source src="assets/c5.m4a" type="audio/mp4">
+  <source src="assets/a4.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 <audio controls #audioPlayerd5>
-  <source src="assets/d5.m4a" type="audio/mp4">
+  <source src="assets/b4.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 <audio controls #audioPlayere5>
-  <source src="assets/e5.m4a" type="audio/mp4">
+  <source src="assets/c4.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 <audio controls #audioPlayergflat>
-  <source src="assets/gflat.m4a" type="audio/mp4">
+  <source src="assets/d4.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 
 
 <audio controls #audioPlayerpop1>
-  <source src="assets/pop1.mp3" type="audio/mp4">
+  <source src="assets/pop1.mp3" type="audio/mp3">
   Your browser does not support the audio element.
 </audio>
 
-<div *ngFor="let user of userInformation">
-  <div class="user" [ngStyle]="{'background-color': user.color}">
+<div class="userContainer">
+  <div class="user" *ngFor="let user of userInformation" [ngStyle]="{'background-color': user.color}">
     <div class="userName">{{user.name}}</div>
   </div>
   </div>

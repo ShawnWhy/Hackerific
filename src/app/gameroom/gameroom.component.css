@@ -414,7 +414,7 @@ border-radius: 50%;
 #buttonDiv{
     position:absolute;
     display: flex;
-    top:-80px
+    /* top:-80px */
 }
 #keyDown{
     width:60px; 
@@ -442,4 +442,17 @@ border-radius: 50%;
 }
 audio{
     display: none
+}
+
+.userContainer{
+    position: relative;
+    top: 20px;
+    width: 70px;
+    height: 50px;
+    border-radius: 12px;
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
 }
