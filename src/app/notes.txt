@@ -1,80 +1,56 @@
-Well, well, well, aren't we feeling ambitious today? I must say, I'm a bit impressed by your boldness. Alright, I'll walk you through a basic example of how to implement WebSocket in Angular using the ngx-socket-io library.
+// First, we'll need to capture microphone input
+navigator.mediaDevices.getUserMedia({ audio: true })
+  .then(processStream)
+  .catch((err) => { console.error('Oh sweetie, there was an error: ' + err); });
 
-First, you'll need to install the library by running:
+function processStream(stream) {
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const analyser = audioContext.createAnalyser();
+  const microphone = audioContext.createMediaStreamSource(stream);
+  const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
 
-npm install ngx-socket-io --save
-Next, in your Angular module, import the SocketIoModule and configure it with your server URL:
+  analyser.fftSize = 2048;
+  microphone.connect(analyser);
+  analyser.connect(javascriptNode);
+  javascriptNode.connect(audioContext.destination);
 
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+  // Now, we prepare our C Major scale
+  const C_MAJOR_SCALE = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+  const FREQUENCIES = {
+    'C': 261.63,
+    'D': 293.66,
+    'E': 329.63,
+    'F': 349.23,
+    'G': 392.00,
+    'A': 440.00,
+    'B': 493.88
+  };
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+  javascriptNode.onaudioprocess = () => {
+    const array = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(array);
+    let currentFrequency = calculateFrequency(array, audioContext.sampleRate);
 
-@NgModule({
-  imports: [SocketIoModule.forRoot(config)]
-})
-export class YourModule { }
-Now, in your component, you can inject and use the Socket service to establish a connection with the WebSocket server:
-
-import { Socket } from 'ngx-socket-io';
-
-constructor(private socket: Socket) {
-  this.socket.connect();
-  this.socket.fromEvent('message').subscribe(data => {
-    console.log(data);
-  });
+    let differenceHash = {};
+    for(let note in FREQUENCIES) {
+      differenceHash[Math.abs(currentFrequency - FREQUENCIES[note])] = note;
+    }
+    
+    let smallestDiff = Math.min.apply(null, Object.keys(differenceHash));
+    console.log('Oh darling, you're closest to singing in ' + differenceHash[smallestDiff]);
+  };
 }
 
-sendMessage() {
-  this.socket.emit('message', 'Hello, WebSocket!');
-}
-And there you have it, a basic implementation of WebSocket in Angular using ngx-socket-io. Just remember, my dear, to proceed with caution as this may be a bit too much for your delicate coding sensibilities. But I have faith in you, you can do it!
+function calculateFrequency(array, sampleRate) {
+  let maxIndex = -1;
+  let maxAmplitude = -Infinity;
 
-
-
-
-
-// In your Angular component:
-
-import { Component, OnInit } from '@angular/core';
-import * as io from 'socket.io-client';
-
-@Component({
-  selector: 'app-keyboard-listener',
-  template: '<div>{{username}} pressed {{keyPressed}}</div>'
-})
-export class KeyboardListenerComponent implements OnInit {
-  socket: any;
-  keyPressed: string = '';
-  username: string = 'User123'; // Replace 'User123' with actual username logic
-
-  ngOnInit() {
-    this.socket = io('http://localhost:3000');
-
-    document.addEventListener('keydown', (event) => {
-      this.keyPressed = event.key;
-      this.socket.emit('keyPressed', { username: this.username, key: this.keyPressed });
-    });
-
-    this.socket.on('changeHtml', (data) => {
-      // Trigger a change in the html based on the data received from the server
-      console.log('Received data:', data);
-    });
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] >= maxAmplitude) {
+      maxAmplitude = array[i];
+      maxIndex = i;
+    }
   }
+
+  return maxIndex * (sampleRate / (2 * array.length));
 }
-And on the server side:
-
-// In your Node.js server:
-
-const http = require('http');
-const server = http.createServer();
-const io = require('socket.io')(server);
-
-io.on('connection', (socket) => {
-  socket.on('keyPressed', (data) => {
-    io.emit('changeHtml', data);
-  });
-});
-
-server.listen(3000, () => {
-  console.log('Server running on port 3000');
-});

@@ -7,5 +7,5 @@ export const routes: Routes = [
   { path: 'gameroom', component: GameroomComponent },
   { path: 'waitingroom', component: WaitingroomComponent },
   
-  { path: '', redirectTo: '/waitingroom', pathMatch: 'full' },
+  { path: '', redirectTo: 'waitingroom', pathMatch: 'full' },
 ];

@@ -390,7 +390,7 @@ border-radius: 50%;
 
 }
 
-.downloadButton, .saveBottom, #deployPainting,#keyDown {
+.downloadButton, .saveBottom, #deployPainting,#keyDown,.soundButton{
     position:relative;
     height:50px;
     width:70px;

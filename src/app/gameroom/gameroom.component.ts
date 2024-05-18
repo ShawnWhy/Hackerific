@@ -22,6 +22,7 @@ import { gsap } from 'gsap';
 import { io } from 'socket.io-client';
 import html2canvas from 'html2canvas';
 import { ThisReceiver } from '@angular/compiler';
+import { AudioserviceService } from '../audioservice.service';
 
 @Component({
   selector: 'app-gameroom',
@@ -70,7 +71,7 @@ export class GameroomComponent implements OnInit {
   @ViewChild('audioPlayerpop1', { static: false }) audioPlayerpop!: ElementRef;
 
   public backgroundcolor: any = 'rgb(255, 255, 255)';
-  public extraColors :any[] = [];
+  public extraColors: any[] = [];
   playAudiocpop() {
     this.audioPlayerpop.nativeElement.play();
   }
@@ -80,25 +81,33 @@ export class GameroomComponent implements OnInit {
   user: any;
 
   paintings: any[] = [];
-  constructor(private homeSV: HomeService, private http: HttpClient, private router: Router) {
+  constructor(
+    private homeSV: HomeService,
+    private http: HttpClient,
+    private router: Router,
+    //pass the variable function to audio service
+
+    private audioService: AudioserviceService
+  ) {
     this.socket = io('http://localhost:8081');
     this.homeSV.getCurrentUser().subscribe((user) => {
       console.log(user);
       //  console.log('comminity page');
       this.user = user;
+      console.log(this.user);
+      if (this.user.color) {
+        console.log('this.user', this.user);
+        // this.createNewUser(this.user);
+        this.socket.emit('gameStart', {
+          name: this.user.username,
+          color: this.user.color,
+        });
+      }
+      //else redirect to the waiting room
+      else {
+        this.router.navigate(['#']);
+      }
     });
-    console.log(this.user);
-    if (this.user.color) {
-      console.log('this.user', this.user);
-      // this.createNewUser(this.user);
-      this.socket.emit('gameStart', {
-        name: this.user.username,
-        color: this.user.color,
-      });
-    }
-    //else redirect to the waiting room
-    else{
-    this.router.navigate(['/waitingroom'])      }
   }
 
   createNewUser(user: any) {
@@ -186,35 +195,27 @@ export class GameroomComponent implements OnInit {
 
   averageColor2(colors: any[]) {
     //average the rgb values of the user color in rgb values
-    let tempR = 0
-    let tempG = 0
-    let tempB = 0
+    let tempR = 0;
+    let tempG = 0;
+    let tempB = 0;
     let number = 0;
-    let newColor=colors[0];
+    let newColor = colors[0];
     for (let i = 0; i < colors.length; i++) {
       let color = colors[i];
-       let colorRGB = color.match(/\d+/g);
-       tempR += parseInt(colorRGB[0])
-       tempG += parseInt(colorRGB[1])
-       tempB += parseInt(colorRGB[2])
-        
+      let colorRGB = color.match(/\d+/g);
+      tempR += parseInt(colorRGB[0]);
+      tempG += parseInt(colorRGB[1]);
+      tempB += parseInt(colorRGB[2]);
+
       number++;
 
       if (number >= colors.length) {
-           newColor = `rgb(${
-             
-             Math.floor(tempR / colors.length)
-           }, ${
-             
-             Math.floor(tempG / colors.length)
-           }, ${
-             
-             Math.floor(tempB / colors.length)
-           })`;
+        newColor = `rgb(${Math.floor(tempR / colors.length)}, ${Math.floor(
+          tempG / colors.length
+        )}, ${Math.floor(tempB / colors.length)})`;
         return newColor;
       }
     }
-    
   }
 
   public randomColorBasedOnColor(color: any) {
@@ -265,6 +266,14 @@ export class GameroomComponent implements OnInit {
     });
   }
 
+  public getAudioStream() {
+    this.audioService.getAudioStream(
+      this.onKeydownSound,
+      this.user.username,
+      this.socket
+    );
+  }
+
   //oninit call a function that generates a splash item every ,5 seconds and give it the random color attribute and random size
   ngOnInit() {
     this.getAllPaintings();
@@ -281,7 +290,7 @@ export class GameroomComponent implements OnInit {
       for (let i = 0; i < this.userInformation.length; i++) {
         colors.push(this.userInformation[i].color);
       }
-      if (this.backgroundcolor !== "rgb(255, 255, 255)"){
+      if (this.backgroundcolor !== 'rgb(255, 255, 255)') {
         colors.push(this.backgroundcolor);
       }
       this.backgroundcolor = this.averageColor2(colors);
@@ -296,9 +305,9 @@ export class GameroomComponent implements OnInit {
       for (let i = 0; i < this.userInformation.length; i++) {
         colors.push(this.userInformation[i].color);
       }
-         if (this.backgroundcolor !== 'rgb(255, 255, 255)') {
-           colors.push(this.backgroundcolor);
-         }
+      if (this.backgroundcolor !== 'rgb(255, 255, 255)') {
+        colors.push(this.backgroundcolor);
+      }
       this.backgroundcolor = this.averageColor2(colors);
       // let tempColor = this.userInformation[0].color;
       // //average the rgb values of the user color in rgb values
@@ -358,7 +367,7 @@ export class GameroomComponent implements OnInit {
       return;
     }
 
-    switch (key) {
+    switch (key.toLowerCase()) {
       case 'a':
         // console.log('key a');
         this.playAudio(this.audioPlayerc4);
@@ -440,10 +449,10 @@ export class GameroomComponent implements OnInit {
               colors.push(this.userInformation[i].color);
             }
             colors.push(fingercolor);
-               if (this.backgroundcolor !== 'rgb(255, 255, 255)') {
-                 colors.push(this.backgroundcolor);
-               }
-            this.backgroundcolor=this.averageColor2(colors);
+            if (this.backgroundcolor !== 'rgb(255, 255, 255)') {
+              colors.push(this.backgroundcolor);
+            }
+            this.backgroundcolor = this.averageColor2(colors);
             let splashcolor = this.splashes[j].color;
             // get the individual rgb values from both the finger and splash div
             let fingerRGB = fingercolor.match(/\d+/g);
@@ -470,6 +479,157 @@ export class GameroomComponent implements OnInit {
           }
 
           this.splashes.splice(j, 1);
+        }
+      }
+    }
+  }
+
+  createSplatSound(
+    key: any,
+    name: any,
+    playAudio: any,
+    audioPlayerc4: any,
+    audioPlayerd4: any,
+    audioPlayere4: any,
+    audioPlayerf4: any,
+    audioPlayerg4: any,
+    audioPlayerc5: any,
+    audioPlayerd5: any,
+    audioPlayere5: any,
+    audioPlayergflat: any,
+    splashes: any[],
+    userInformation: any[],
+    backgroundcolor: any,
+    splatBits: any[],
+    averageColor2: any,
+    playAudiocpop: any
+  ) {
+    // console.log(key);
+    //for each of the divs with finger class get the x location and height
+    var selectedKey;
+    //find the index of the user that pressed the key via name attribute
+    // find the element that has the id of the name of the user that pressed the key
+    var selectedPiano = document.getElementById(name);
+    console.log('selectedPiano', selectedPiano);
+    if (!selectedPiano) {
+      //stop
+      console.log('selected piano not found');
+      return;
+    }
+
+    switch (key) {
+      case 'a':
+        // console.log('key a');
+        playAudio(audioPlayerc4);
+        selectedKey = selectedPiano.getElementsByClassName('key')[0];
+        break;
+      case 's':
+        playAudio(audioPlayerd4);
+        selectedKey = selectedPiano.getElementsByClassName('key')[1];
+        break;
+      case 'd':
+        playAudio(audioPlayere4);
+        // console.log('key d');
+        selectedKey = selectedPiano.getElementsByClassName('key')[2];
+        break;
+      case 'f':
+        playAudio(audioPlayerf4);
+        selectedKey = selectedPiano.getElementsByClassName('key')[3];
+        break;
+      case 'g':
+        playAudio(audioPlayerg4);
+        selectedKey = selectedPiano.getElementsByClassName('key')[4];
+        break;
+      case 'h':
+        playAudio(audioPlayerc5);
+        selectedKey = selectedPiano.getElementsByClassName('key')[5];
+        break;
+      case 'j':
+        playAudio(audioPlayerd5);
+        selectedKey = selectedPiano.getElementsByClassName('key')[6];
+        break;
+      case 'k':
+        playAudio(audioPlayere5);
+        selectedKey = selectedPiano.getElementsByClassName('key')[7];
+        break;
+      case 'l':
+        playAudio(audioPlayergflat);
+        selectedKey = selectedPiano.getElementsByClassName('key')[8];
+        break;
+      default:
+        playAudio(audioPlayerc4);
+        selectedKey = selectedPiano.getElementsByClassName('key')[0];
+    }
+    // console.log(selectedKey);
+    // selectedKey.style.backgroundColor = 'yellow';
+    var finger = selectedKey.getElementsByClassName('finger');
+    console.log('finger', finger);
+
+    // for (let i = 0; i < finger.length; i++) {
+    //   //set finger element background t0 yellow
+    //   finger[i].style.backgroundColor = 'yellow';
+
+    // }
+    // console.log(finger);
+    for (let i = 0; i < finger.length; i++) {
+      var x1 = finger[i].getBoundingClientRect().left;
+      var x2 = x1 + finger[i].getBoundingClientRect().width;
+      var y = finger[i].getBoundingClientRect().height;
+      // console.log(x1, x2, y);
+      for (let j = 0; j < splashes.length; j++) {
+        let positionx = splashes[j].position.x;
+        let positiony = splashes[j].position.y;
+        let size = splashes[j].size;
+        //create a new div with the class splat
+        //if the bounding box of the finger div intersects with the bounding box of the splash div create a new div with the class splat
+        if (
+          positionx + size >= x1 &&
+          positionx <= x2 &&
+          y > 36
+          // && (positiony+size >=y && positiony <= y)
+        ) {
+          playAudiocpop();
+          for (let h = 0; h < 5; h++) {
+            //create a object with the attrbutes, color, size, border radius, top and left values
+            let fingercolor = window.getComputedStyle(
+              finger[i]
+            ).backgroundColor;
+
+            let colors = [];
+            for (let i = 0; i < userInformation.length; i++) {
+              colors.push(userInformation[i].color);
+            }
+            colors.push(fingercolor);
+            if (backgroundcolor !== 'rgb(255, 255, 255)') {
+              colors.push(backgroundcolor);
+            }
+            this.backgroundcolor = averageColor2(colors);
+            let splashcolor = splashes[j].color;
+            // get the individual rgb values from both the finger and splash div
+            let fingerRGB = fingercolor.match(/\d+/g);
+            let splashRGB = splashcolor.match(/\d+/g);
+            let newColor;
+            if (fingerRGB && splashRGB) {
+              newColor = `rgb(${
+                (parseInt(fingerRGB[0]) + parseInt(splashRGB[0])) / 2
+              }, ${(parseInt(fingerRGB[1]) + parseInt(splashRGB[1])) / 2}, ${
+                (parseInt(fingerRGB[2]) + parseInt(splashRGB[2])) / 2
+              })`;
+
+              var splat = {
+                color: newColor,
+                size: Math.random() * parseFloat(splashes[j].size) + 2,
+                borderRadius: Math.random() * 50 + '%',
+                top: positiony,
+                left: positionx,
+                animation: Math.floor(Math.random() * 19) + 1,
+              };
+
+              splatBits.push(splat);
+            }
+          }
+
+          splashes.splice(j, 1);
         }
       }
     }
@@ -534,6 +694,14 @@ export class GameroomComponent implements OnInit {
     this.socket.emit('keyPressed', {
       key: event.key,
       name: this.user.username,
+    });
+    // this.pressKey(event.key);
+  }
+  onKeydownSound(key: any, name: any,socket:any) {
+    console.log("onkeydown")
+    socket.emit('keyPressed', {
+      key: key,
+      name: name,
     });
     // this.pressKey(event.key);
   }
@@ -647,7 +815,7 @@ export class GameroomComponent implements OnInit {
   }
 
   public getAllPaintings() {
-    console.log("get paintings");
+    console.log('get paintings');
     this.http.get<any>('/api/paintings').subscribe({
       next: (paintings) => {
         console.log('paintings', paintings);
@@ -658,41 +826,39 @@ export class GameroomComponent implements OnInit {
   }
 
   public savePainting() {
-    if(this.splatBits.length>10){
-    //get the piano div
-    let splatbits = this.splatBits;
-    let string = JSON.stringify(splatbits);
-    let users: string = '';
-    for (let i = 0; i < this.userInformation.length; i++) {
-      users += this.userInformation[i].name + ' ';
+    if (this.splatBits.length > 10) {
+      //get the piano div
+      let splatbits = this.splatBits;
+      let string = JSON.stringify(splatbits);
+      let users: string = '';
+      for (let i = 0; i < this.userInformation.length; i++) {
+        users += this.userInformation[i].name + ' ';
+      }
+      let date = new Date();
+      //turn date into dd/mm/yyyy format
+      let dateString =
+        date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
+      //use html2canvas to save the contents of the piano div to an image file
+      let newPainting = {
+        string: string,
+        users: users,
+        date: dateString,
+      };
+      this.paintings.push(newPainting);
+      console.log('newpainting', newPainting);
+
+      this.http.post('/api/storePainting', newPainting).subscribe({
+        next: (data) => {
+          console.log('storedpainting', data);
+          this.socket.emit('savePainting');
+        },
+      });
+
+      //convert the canvas to a data url
+    } else {
+      alert('Please create a painting with more than 10 splats before saving');
     }
-    let date = new Date();
-    //turn date into dd/mm/yyyy format
-    let dateString =
-      date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
-    //use html2canvas to save the contents of the piano div to an image file
-    let newPainting = {
-      string: string,
-      users: users,
-      date: dateString,
-    };
-    this.paintings.push(newPainting);
-    console.log('newpainting', newPainting);
-
-    this.http.post('/api/storePainting', newPainting).subscribe({
-      next: (data) => {
-        console.log('storedpainting', data);
-        this.socket.emit('savePainting');
-      },
-    });
-
-    //convert the canvas to a data url
   }
-  else{
-    alert('Please create a painting with more than 10 splats before saving')
-  
-  }
-}
 
   public selectedNumber: any;
 

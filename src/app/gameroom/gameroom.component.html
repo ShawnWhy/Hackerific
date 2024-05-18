@@ -40,6 +40,10 @@
 </div>
 
 <div id="buttonDiv">
+  <div class="instructions" style="width:100%">
+    please press down on this element to start playing<br />
+    use the keys "a" "s" "d" "f" "g" "h" "j" "k" "l" to play the piano<br />
+  </div>
      <input id="keyDown" (keydown)="onKeydown($event)">
 
    <div class = "downloadButton" (click)="saveImage()">Download Image</div>
@@ -107,6 +111,9 @@
     <div class="userName">{{user.name}}</div>
   </div>
   </div>
+
+  <button (click)="getAudioStream()" class="soundButton">use sound</button>
+
 
 </div>
 

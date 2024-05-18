@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common'
 import { NgModel } from '@angular/forms';
+RouterModule.forRoot(routes, { useHash: true });
+import { routes } from './app.routes';
 
 @NgModule({
   declarations: [
